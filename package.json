@@ -1,0 +1,21 @@
+{
+  "name": "panorama-template",
+  "version": "0.0.1",
+  "description": "Template for starting new projects using the @panorama toolkit.",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "gulp test"
+  },
+  "keywords": [
+    "visualization",
+    "geospatial",
+    "maps",
+    "mapping",
+    "dataviz",
+    "geoviz"
+  ],
+  "author": "stamen",
+  "license": "ISC"
+}
