@@ -1,5 +1,6 @@
-// npm modules
 import * as React from 'react';
+
+// example module from @panorama
 import Legend from '@panorama/legend';
 
 /*
@@ -16,6 +17,11 @@ import ExampleStore from './stores/ExampleStore';
 
 
 // components
+// TODO: make component, use exampleComponent.scss.
+// can component require css instead of having that happen elsewhere? more modular.
+// (if i get this to work, make it happen for legend component too?)
+
+
 
 
 // actions
@@ -42,17 +48,25 @@ export default class App extends React.Component {
 
 	componentWillMount () {
 
+		//
+
 	}
 
 	componentDidMount () {
+
+		// ExampleStore.addChangeListener(this.onChange);
 
 	}
 
 	componentWillUnmount () {
 
+		// ExampleStore.removeChangeListener(this.onChange);
+
 	}
 
 	componentDidUpdate () {
+
+		//
 
 	}
 

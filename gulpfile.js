@@ -40,7 +40,7 @@ function browserifyTask (options) {
 	// @panorama components specify these keys.
 	parcelify(appBundler, {
 		bundles: {
-			style: './build/style.css'
+			style: './build/modules.css'
 		}
 	});
 
@@ -113,25 +113,25 @@ function browserifyTask (options) {
 }
 
 function cssTask(options) {
-		if (options.development) {
-			var run = function () {
-				var start = new Date();
-				console.log('Building CSS bundle');
-				gulp.src(options.src)
-					.pipe(sass())
-					.pipe(gulp.dest(options.dest))
-					.pipe(notify(function () {
-						console.log('CSS bundle built in ' + (Date.now() - start) + 'ms');
-					}));
-			};
-			run();
-			gulp.watch(options.src, run);
-		} else {
+	if (options.development) {
+		var run = function () {
+			var start = new Date();
+			console.log('Building CSS bundle');
 			gulp.src(options.src)
 				.pipe(sass())
-				.pipe(cssmin())
-				.pipe(gulp.dest(options.dest));
-		}
+				.pipe(gulp.dest(options.dest))
+				.pipe(notify(function () {
+					console.log('CSS bundle built in ' + (Date.now() - start) + 'ms');
+				}));
+		};
+		run();
+		gulp.watch(options.src, run);
+	} else {
+		gulp.src(options.src)
+			.pipe(sass())
+			.pipe(cssmin())
+			.pipe(gulp.dest(options.dest));
+	}
 }
 
 function copyTask(options) {
@@ -140,7 +140,6 @@ function copyTask(options) {
 }
 
 function webserverTask(options) {
-
 	options = options || {}
 	var port = options.port || WEB_SERVER_PORT;
 
@@ -181,7 +180,7 @@ gulp.task('default', function () {
 
 		cssTask({
 			"development" : true,
-			"src"				: './src/*.scss',
+			"src"				: './scss/*.scss',
 			"dest"				: './build'
 		});
 
@@ -212,7 +211,7 @@ gulp.task('dist', function () {
 
 		cssTask({
 			"development" : false,
-			"src"				: './src/*.scss',
+			"src"				: './scss/*.scss',
 			"dest"				: './dist'
 		});
 
