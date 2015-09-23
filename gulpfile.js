@@ -3,7 +3,7 @@ var gulp             = require('gulp'),
     buffer           = require('vinyl-buffer'),
     browserify       = require('browserify'),
     watchify         = require('watchify'),
-    reactify         = require('reactify'),
+    babelify         = require('babelify'),
     parcelify        = require('parcelify'),
     uglify           = require('gulp-uglify'),
     notify           = require('gulp-notify'),
@@ -21,6 +21,7 @@ var gulp             = require('gulp'),
 // but include in your application deployment
 var dependencies = [
 	'react',
+	'flux'
 ];
 
 var WEB_SERVER_PORT = 8888;
@@ -30,7 +31,7 @@ function browserifyTask (options) {
 	// Bundle the application with browserify
 	var appBundler = browserify({
 		entries: [options.src],			// Application entry point; browserify finds and bundles all dependencies from there
-		transform: [reactify],			// Convert React .jsx -> vanilla .js
+		transform: [babelify],			// Convert React .jsx -> vanilla .js and enable ES6
 		debug: options.development,		// Gives us sourcemapping
 		cache: {}, packageCache: {}, fullPaths: options.development // watchify requirements
 	});

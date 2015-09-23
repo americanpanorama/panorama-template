@@ -1,5 +1,4 @@
-/** @jsx React.DOM */
-var React = require('react'),
-    App   = require('./App.jsx');
+import * as React from 'react';
+import App from './App.jsx';
 
 React.render(<App/>, document.body);
