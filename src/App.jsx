@@ -1,33 +1,28 @@
 // npm modules
 import * as React from 'react';
-// var Legend = require("@panorama/legend");
+import Legend from '@panorama/legend';
 
 /*
-Data flow via Flux: https://facebook.github.io/flux/docs/overview.html
-
-                 ┌-----   actions  <-----┐
-                 v                       |    
-actions --> dispatcher --> stores --> views
-*/
+ * Data flow via Flux:
+ * https://facebook.github.io/flux/docs/overview.html
+ * 
+ *                  ┌-----   actions  <-----┐
+ *                  v                       |    
+ * actions --> dispatcher --> stores --> views
+ */
 
 // stores
 import ExampleStore from './stores/ExampleStore';
 
-//
-// TODO WEDS:
-// switch from reactify to babelify
-// to enable this kind of ES6 action.
-// find "jsx" on https://github.com/babel/babelify
-// for more info.
-//
-
-
 
 // components
 
+
 // actions
 
+
 // utils
+
 
 // main app container
 export default class App extends React.Component {
@@ -36,25 +31,12 @@ export default class App extends React.Component {
 
 		super();
 
-		// instead of getInitialState
+		// set up initial state (instead of ES5-style getInitialState)
 		// this.state = 
 
-	}
-
-	getDefaultProps () {
-
-		/*
-		return {
-			legendData: {
-				items: [
-					'narratives',
-					'cotton',
-					'sugar'
-				],
-				initialSelection: 'narratives'
-			}
-		};
-		*/
+		// bind handlers to this component instance,
+		// since React no longer does this automatically when using ES6
+		// this.onThingClicked = this.onThingClicked.bind(this);
 
 	}
 
@@ -63,8 +45,6 @@ export default class App extends React.Component {
 	}
 
 	componentDidMount () {
-
-		console.log("did mount");
 
 	}
 
@@ -79,15 +59,29 @@ export default class App extends React.Component {
 	render () {
 
 		return (
-			<div></div>
-		);
-
-		/*
-		return (
 			<Legend data={this.props.legendData}/>
 		);
-		*/
 
 	}
 
 }
+
+// property validation
+App.propTypes = {
+
+};
+
+// property defaults
+// (instead of ES5-style getDefaultProps)
+App.defaultProps = {
+
+	legendData: {
+		items: [
+			'narratives',
+			'cotton',
+			'sugar'
+		],
+		initialSelection: 'narratives'
+	}
+
+};
