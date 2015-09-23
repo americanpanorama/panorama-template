@@ -1,0 +1,10 @@
+// override Skeleton's strange line-height setting
+body {
+	line-height: 1.0;
+}
+
+.example-app {
+	h2 ~ h2 {
+		margin-top: 1em;
+	}
+}

@@ -459,5 +459,16 @@ hr {
   display: table;
   clear: both; }
 
+body {
+  line-height: 1.0; }
+
+.example-app h2 ~ h2 {
+  margin-top: 1em; }
+
 .example-component {
-  backgroundColor: #efe6d0; }
+  display: inline-block;
+  background-color: #efe6d0;
+  padding: 10px; }
+  .example-component h3 {
+    line-height: 1.0;
+    margin-bottom: 0; }

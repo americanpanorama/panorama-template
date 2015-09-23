@@ -13,12 +13,12 @@ import Legend from '@panorama/legend';
  */
 
 // stores
-import ExampleStore from './stores/ExampleStore';
+import ExampleStore from './stores/ExampleStore.jsx';
 
 
 // components
-// TODO: make component, use exampleComponent.scss.
-// can component require css instead of having that happen elsewhere? more modular.
+import ExampleComponent from './components/ExampleComponent.jsx';
+// TODO: can component require css instead of having that happen elsewhere? more modular.
 // (if i get this to work, make it happen for legend component too?)
 
 
@@ -33,9 +33,9 @@ import ExampleStore from './stores/ExampleStore';
 // main app container
 export default class App extends React.Component {
 
-	constructor () {
+	constructor (props) {
 
-		super();
+		super(props);
 
 		// set up initial state (instead of ES5-style getInitialState)
 		// this.state = 
@@ -73,7 +73,12 @@ export default class App extends React.Component {
 	render () {
 
 		return (
-			<Legend data={this.props.legendData}/>
+			<div className='example-app'>
+				<h2>Application component:</h2>
+				<ExampleComponent title={this.props.exampleTitle}/>
+				<h2>Imported component:</h2>
+				<Legend data={this.props.legendData}/>
+			</div>
 		);
 
 	}
@@ -82,6 +87,9 @@ export default class App extends React.Component {
 
 // property validation
 App.propTypes = {
+
+	legendData: React.PropTypes.object,
+	exampleTitle: React.PropTypes.string,
 
 };
 
@@ -96,6 +104,8 @@ App.defaultProps = {
 			'sugar'
 		],
 		initialSelection: 'narratives'
-	}
+	},
+
+	exampleTitle: 'Example Component'
 
 };
