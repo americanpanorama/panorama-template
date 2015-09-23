@@ -73,11 +73,25 @@ export default class App extends React.Component {
 	render () {
 
 		return (
-			<div className='example-app'>
-				<h2>Application component:</h2>
-				<ExampleComponent title={this.props.exampleTitle}/>
-				<h2>Imported component:</h2>
-				<Legend data={this.props.legendData}/>
+			<div className='container full-height'>
+				<div className='row full-height'>
+					<div className='columns eight full-height'>
+						<div className='row top-row template-tile'>
+							<h2>Application component:</h2>
+							<ExampleComponent title={this.props.exampleTitle}/>
+						</div>
+						<div className='row bottom-row template-tile'>
+						</div>
+					</div>
+					<div className='columns four full-height'>
+						<div className='row top-row template-tile'>
+						</div>
+						<div className='row bottom-row template-tile'>
+							<h2>Imported component:</h2>
+							<Legend data={this.props.legendData}/>
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 

@@ -1,10 +1,52 @@
+// fill the browser with our glorious website
+body,
+html {
+	height: 100%;
+	width: 100%;
+}
+
 // override Skeleton's strange line-height setting
 body {
 	line-height: 1.0;
 }
 
-.example-app {
-	h2 ~ h2 {
-		margin-top: 1em;
+.full-height {
+  height: 100%;
+}
+
+.template-tile {
+	position: relative;
+	padding: 1em;
+	box-sizing: border-box;
+
+	// double border
+	&::before {
+		position: absolute;
+		display: block;
+		content: '';
+		top: 0.2em;
+		right: 0.2em;
+		bottom: 0.2em;
+		left: 0.2em;
+		border: solid 1px rgb(221, 204, 168);
 	}
+
+	&::after {
+		position: absolute;
+		display: block;
+		content: '';
+		top: 0.4em;
+		right: 0.4em;
+		bottom: 0.4em;
+		left: 0.4em;
+		border: solid 1px rgb(221, 204, 168);
+	}
+}
+
+.top-row {
+	height: 66.5%;
+}
+
+.bottom-row {
+	height: 33.5%;
 }

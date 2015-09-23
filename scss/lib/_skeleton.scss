@@ -48,12 +48,12 @@ $font-color: #222 !default;
 $font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 
 //Grid Variables
-$container-width: 960px !default;
-$container-width-larger-than-mobile: 85% !default;
-$container-width-larger-than-phablet: 80% !default;
+$container-width: 100% !default;
+$container-width-larger-than-mobile: 100% !default;
+$container-width-larger-than-phablet: 100% !default;
 $total-columns: 12 !default;
 $column-width: 100 / $total-columns !default; // calculates individual column width based off of # of columns
-$column-margin: 4% !default; // space between columns
+$column-margin: 1% !default; // space between columns
 
 // Misc
 $global-radius: 4px !default;
