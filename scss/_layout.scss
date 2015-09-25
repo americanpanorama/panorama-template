@@ -3,15 +3,22 @@ body,
 html {
 	height: 100%;
 	width: 100%;
+	background-color: rgb(255, 255, 255);
 }
 
-// override Skeleton's strange line-height setting
 body {
+	// override Skeleton's strange line-height setting
 	line-height: 1.0;
+
+	@extend %lato-light;
+}
+
+.container {
+	padding: $container-padding;
 }
 
 .full-height {
-  height: 100%;
+	height: 100%;
 }
 
 .template-tile {
@@ -44,14 +51,38 @@ body {
 }
 
 .top-row {
-	height: 66.5%;
+	// flexible top row height, set in JS
+	// by App.jsx#computeComponentDimensions
+	margin-bottom: $container-padding;
 }
 
 .bottom-row {
-	height: 33.5%;
+	// fixed bottom row height
+	height: $bottom-row-height;
+}
+
+header {
+	position: relative;
+	height: $header-height;
+	padding-top: 10px;
+	color: $header-color;
+
+	h1 {
+		margin: 0;
+	}
+
+	.header-main {
+		@extend %merriweather-light;
+	}
+
+	.header-sub {
+		@extend %lato-thin;
+		font-size: 0.7em;
+		margin-left: 0.9em;
+	}
 }
 
 .leaflet-container {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }

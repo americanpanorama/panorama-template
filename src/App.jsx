@@ -1,6 +1,9 @@
+// import node modules
 import * as React from 'react';
+import { render } from 'react-dom';
+import { Map, TileLayer, GeoJson } from 'react-leaflet';
 
-// example module from @panorama
+// import example module from @panorama
 import Legend from '@panorama/legend';
 
 /*
@@ -21,13 +24,16 @@ import ExampleComponent from './components/ExampleComponent.jsx';
 // TODO: can component require css instead of having that happen elsewhere? more modular.
 // (if i get this to work, make it happen for legend component too?)
 
-
+// 
+import CartoDBTileLayer from './components/CartoDBTileLayer.jsx';
 
 
 // actions
 
 
 // utils
+import config from '../.env.json';
+
 
 
 // main app container
@@ -64,23 +70,25 @@ export default class App extends React.Component {
 
 		// set up initial state in constructor
 		// (instead of ES5-style getInitialState)
-		// this.state = 
+		this.state = this.getDefaultState();
 
 		// bind handlers to this component instance,
 		// since React no longer does this automatically when using ES6
-		// this.onThingClicked = this.onThingClicked.bind(this);
+		this.onMapMove = this.onMapMove.bind(this);
+		this.onWindowResize = this.onWindowResize.bind(this);
 
 	}
 
 	componentWillMount () {
 
-		//
+		this.computeComponentDimensions();
 
 	}
 
 	componentDidMount () {
 
 		// ExampleStore.addChangeListener(this.onChange);
+		window.addEventListener('resize', this.onWindowResize);
 
 	}
 
@@ -96,21 +104,91 @@ export default class App extends React.Component {
 
 	}
 
+	onWindowResize (event) {
+
+		this.computeComponentDimensions();
+
+	}
+
+	onMapMove (event) {
+
+		// TODO: emit event that is picked up by hash manager component
+		// this.updateURL({loc: hashUtils.formatCenterAndZoom(evt.target)}, true);
+		console.log(">>>>> map moved");
+
+	}
+
+	getDefaultState () {
+
+		return {
+			dimensions: {
+				upperLeft: {
+					width: 0,
+					height: 0
+				},
+				upperRight: {
+					width: 0,
+					height: 0
+				}
+			}
+		};
+
+	}
+
+	computeComponentDimensions () {
+
+		// based off of sizes stored within _variables.scss --
+		// if you change them there, change them here.
+		var containerPadding = 20,
+		    headerHeight = 60,
+		    bottomRowHeight = 230,
+		    dimensions = {};
+
+		dimensions.upperRight = {
+			height: window.innerHeight - bottomRowHeight - 3 * containerPadding
+		};
+
+		dimensions.upperLeft = {
+			height: dimensions.upperRight.height - headerHeight
+		};
+
+		this.setState({ dimensions: dimensions });
+
+	}
+
 	render () {
+
+		// TODO: these values need to go elsewhere, probably in a componentized hash parser/manager
+		var loc = [-5.200, 0.330],
+			zoom = 5;
 
 		return (
 			<div className='container full-height'>
 				<div className='row full-height'>
 					<div className='columns eight full-height'>
-						<div className='row top-row template-tile'>
+						<header className='row u-full-width'>
+							<h1><span className='header-main'>American Panorama Template</span><span className='header-sub'>1800&ndash;2000</span></h1>
+						</header>
+						<div className='row top-row template-tile' style={{height: this.state.dimensions.upperLeft.height + "px"}}>
+							<Map
+								center={loc}
+								zoom={zoom}
+							>
+								<CartoDBTileLayer
+									url={config.cartodb.layers[0].url}
+									userId={config.cartodb.userId}
+									sql={config.cartodb.layers[0].sql}
+									cartocss={config.cartodb.layers[0].cartocss}
+								/>
+							</Map>
+						</div>
+						<div className='row bottom-row template-tile'>
 							<h2>Application component:</h2>
 							<ExampleComponent title={this.props.exampleTitle}/>
 						</div>
-						<div className='row bottom-row template-tile'>
-						</div>
 					</div>
 					<div className='columns four full-height'>
-						<div className='row top-row template-tile'>
+						<div className='row top-row template-tile' style={{height: this.state.dimensions.upperRight.height + "px"}}>
 						</div>
 						<div className='row bottom-row template-tile'>
 							<h2>Imported component:</h2>
