@@ -3,7 +3,9 @@
 @import "lib/normalize";
 
 // application-wide styles
-@import "app";
+@import "variables";
+@import "layout";
+@import "typography";
 
 // component styles
 @import "components/exampleComponent";

@@ -62,7 +62,8 @@ export default class App extends React.Component {
 
 		super(props);
 
-		// set up initial state (instead of ES5-style getInitialState)
+		// set up initial state in constructor
+		// (instead of ES5-style getInitialState)
 		// this.state = 
 
 		// bind handlers to this component instance,
