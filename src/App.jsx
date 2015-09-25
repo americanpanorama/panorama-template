@@ -33,6 +33,31 @@ import ExampleComponent from './components/ExampleComponent.jsx';
 // main app container
 export default class App extends React.Component {
 
+	// property validation (ES7-style React)
+	static propTypes = {
+
+		legendData: React.PropTypes.object,
+		exampleTitle: React.PropTypes.string,
+
+	};
+
+	// property defaults (ES7-style React)
+	// (instead of ES5-style getDefaultProps)
+	static defaultProps = {
+
+		legendData: {
+			items: [
+				'narratives',
+				'cotton',
+				'sugar'
+			],
+			initialSelection: 'narratives'
+		},
+
+		exampleTitle: 'Example Component'
+
+	};
+
 	constructor (props) {
 
 		super(props);
@@ -98,28 +123,3 @@ export default class App extends React.Component {
 	}
 
 }
-
-// property validation
-App.propTypes = {
-
-	legendData: React.PropTypes.object,
-	exampleTitle: React.PropTypes.string,
-
-};
-
-// property defaults
-// (instead of ES5-style getDefaultProps)
-App.defaultProps = {
-
-	legendData: {
-		items: [
-			'narratives',
-			'cotton',
-			'sugar'
-		],
-		initialSelection: 'narratives'
-	},
-
-	exampleTitle: 'Example Component'
-
-};
