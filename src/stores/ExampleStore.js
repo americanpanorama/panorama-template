@@ -10,9 +10,16 @@ const ExampleStore = {
 	data: [],
 
 	// dataLoader: CartoDBLoader,
+
+	// Sample data loader, with setTimeout
+	// emulating network response delay
 	dataLoader: {
 		query: (value) => {
-			return Promise.resolve(value);
+			return new Promise((resolve, reject) => {
+				setTimeout(() => {
+					return resolve(value);
+				}, 1000);
+			});
 		}
 	},
 

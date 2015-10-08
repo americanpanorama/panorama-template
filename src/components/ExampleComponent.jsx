@@ -10,7 +10,9 @@ export default class ExampleComponent extends React.Component {
 		super();
 
 		// set up initial state (instead of ES5-style getInitialState)
-		// this.state = 
+		this.state = {
+			initialDataLoaded: false
+		};
 
 		// bind handlers to this component instance,
 		// since React no longer does this automatically when using ES6
@@ -48,6 +50,7 @@ export default class ExampleComponent extends React.Component {
 		return (
 			<div className='example-component'>
 				<h3>{this.props.title}</h3>
+				<p>Initial data load {this.state.initialDataLoaded ? 'complete!' : 'pending...'}</p>
 			</div>
 		);
 
@@ -58,7 +61,9 @@ export default class ExampleComponent extends React.Component {
 		console.log(`[4] The data requested on app init land in the view that will render them, in ExampleComponent.storeChanged(). A setState() call updates the data and triggers a render().`);
 
 		// setState with the updated data, which causes a re-render()
-		this.setState({});
+		this.setState({
+			initialDataLoaded: true
+		});
 
 	}
 
