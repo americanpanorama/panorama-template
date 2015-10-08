@@ -11,15 +11,11 @@ import Legend from '@panorama/legend';
  * https://facebook.github.io/flux/docs/overview.html
  * 
  *                  ┌-----   actions  <-----┐
- *                  v                       |    
+ *                  v                       |
  * actions --> dispatcher --> stores --> views
  */
 
-// stores
-import ExampleStore from './stores/ExampleStore.jsx';
-
-
-// components
+// components (views)
 import ExampleComponent from './components/ExampleComponent.jsx';
 // TODO: can component require css instead of having that happen elsewhere? more modular.
 // (if i get this to work, make it happen for legend component too?)
@@ -27,12 +23,10 @@ import ExampleComponent from './components/ExampleComponent.jsx';
 // 
 import CartoDBTileLayer from './components/CartoDBTileLayer.jsx';
 
-
-// actions
-
-
 // utils
 import config from '../.env.json';
+import AppDispatcher from './utils/AppDispatcher';
+import { ExampleActions } from './utils/AppActionCreator';
 
 
 
@@ -87,14 +81,17 @@ export default class App extends React.Component {
 
 	componentDidMount () {
 
-		// ExampleStore.addChangeListener(this.onChange);
 		window.addEventListener('resize', this.onWindowResize);
+
+		console.log(`Welcome to your Flux tour. Watch the data flow...`);
+		console.log(`[1] App requests initial data in App.componentDidMount().`);
+		ExampleActions.getInitialData(this.state);
 
 	}
 
 	componentWillUnmount () {
 
-		// ExampleStore.removeChangeListener(this.onChange);
+		// 
 
 	}
 
