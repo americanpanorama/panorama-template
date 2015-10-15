@@ -11,7 +11,45 @@ body {
 	line-height: 1.0;
 
 	@extend %lato-light;
+
+	// Note: below are very loose responsive breakpoints;
+	// tighten up as needed for your application.
+
+	/* ----------- Phones ----------- */
+	@media screen
+		and (max-width: 750px) {
+			font-size: 16px;
+	}
+
+	/* ----------- Tablets ----------- */
+	@media screen
+		and (min-width: 750px) 
+		and (max-width: 1280px) {
+			font-size: 20px;
+	}
+
+	/* ----------- Non-Retina Screens ----------- */
+	@media screen
+		and (min-width: 1280px) 
+		and (-webkit-min-device-pixel-ratio: 1) {
+			font-size: 24px;
+	}
+
+	/* ----------- Retina Screens ----------- */
+	@media screen
+		and (min-width: 1280px) 
+		and (-webkit-min-device-pixel-ratio: 2)
+		and (min-resolution: 192dpi) {
+			font-size: 24px;
+	}
 }
+
+h1 { font-size: 2em; }
+h2 { font-size: 1.4em; }
+h3 { font-size: 1em; }
+h4 { font-size: 0.67em; }
+h5 { font-size: 0.5em; }
+h6 { font-size: 0.35em; }
 
 .container {
 	padding: $container-padding;
@@ -23,7 +61,7 @@ body {
 
 .template-tile {
 	position: relative;
-	padding: 1.5em;
+	padding: $container-padding;
 	box-sizing: border-box;
 
 	// double border
@@ -35,7 +73,7 @@ body {
 		right: 0;
 		bottom: 0;
 		left: 0;
-		border: solid 1px rgb(245, 245, 245);
+		border: solid 1px rgb(225, 225, 225);
 	}
 
 	&::after {
@@ -65,7 +103,6 @@ header {
 	position: relative;
 	height: $header-height;
 	padding-top: 10px;
-	color: $header-color;
 
 	h1 {
 		margin: 0;

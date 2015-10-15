@@ -137,7 +137,7 @@ export default class App extends React.Component {
 		// based off of sizes stored within _variables.scss --
 		// if you change them there, change them here.
 		var containerPadding = 20,
-		    headerHeight = 60,
+		    headerHeight = 80,
 		    bottomRowHeight = 230,
 		    dimensions = {};
 
