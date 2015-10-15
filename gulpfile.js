@@ -125,7 +125,7 @@ function cssTask(options) {
 				}));
 		};
 		run();
-		gulp.watch(options.src, run);
+		gulp.watch(options.watchfiles, run);
 	} else {
 		gulp.src(options.src)
 			.pipe(sass())
@@ -181,6 +181,7 @@ gulp.task('default', function () {
 		cssTask({
 			"development" : true,
 			"src"				: './scss/*.scss',
+			"watchfiles"        : './scss/**/*.scss',
 			"dest"				: './build'
 		});
 
