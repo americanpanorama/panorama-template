@@ -1,6 +1,5 @@
 // import node modules
 import * as React from 'react';
-import { render } from 'react-dom';
 import { Map, TileLayer, GeoJson } from 'react-leaflet';
 
 // import example module from @panorama

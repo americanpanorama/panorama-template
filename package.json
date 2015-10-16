@@ -23,11 +23,10 @@
   "author": "stamen",
   "license": "ISC",
   "dependencies": {
-    "@panorama/legend": "0.1.0",
+    "@panorama/toolkit": "^0.0.4",
     "flux": "^2.1.1",
     "leaflet": "^0.7.5",
     "react": "^0.13.3",
-    "react-dom": "^0.14.0-rc1",
     "react-leaflet": "^0.7.0"
   },
   "devDependencies": {
