@@ -42,23 +42,21 @@ export default class CartoDBTileLayer extends BaseTileLayer {
 	_getCartoDBTilesTemplates(callback) {
 		// cartodb is a global, defined by cartodb.js, loaded in index.html
 		// TODO: `npm install cartodb` instead of including as <script>
-		cartodb.Tiles.getTiles(
-			{
-				type: 'cartodb',
-				user_name: this.props.userId,
-				sublayers: [{
-					"sql": this.props.sql,
-					"cartocss": this.props.cartocss
-				}]
-			},
+		cartodb.Tiles.getTiles({
+			type: 'cartodb',
+			user_name: this.props.userId,
+			sublayers: [{
+				"sql": this.props.sql,
+				"cartocss": this.props.cartocss
+			}]
+		},
 
-			function (tiles, error) {
-				if (!tiles || error) {
-					callback(error, tiles);
-				}
-				callback(null, tiles);
+		function (tiles, error) {
+			if (!tiles || error) {
+				callback(error, tiles);
 			}
-		);
+			callback(null, tiles);
+		});
 	}
 
 }

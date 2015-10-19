@@ -5,17 +5,12 @@ var gulp             = require('gulp'),
     watchify         = require('watchify'),
     babelify         = require('babelify'),
     parcelify        = require('parcelify'),
-    uglify           = require('gulp-uglify'),
-    notify           = require('gulp-notify'),
-    concat           = require('gulp-concat'),
-    cssmin           = require('gulp-cssmin'),
-    gutil            = require('gulp-util'),
-    livereload       = require('gulp-livereload'),
-    copy             = require("gulp-copy"),
     glob             = require('glob'),
     rimraf           = require("rimraf"),
-    connect          = require("gulp-connect"),
-    sass             = require("gulp-sass");
+    gulpLoadPlugins  = require('gulp-load-plugins');
+
+// Automatically load any gulp plugins in your package.json
+var $ = gulpLoadPlugins();
 
 // External dependencies you do not want to rebundle while developing,
 // but include in your application deployment
@@ -53,26 +48,30 @@ function browserifyTask (options) {
 	// The bundling process
 	function createBundle() {
 
+		lintTask(options);
+
 		var start = Date.now();
 		console.log('Building APP bundle');
 		if (options.development) {
 			appBundler.bundle()
-				.on('error', gutil.log)
+				.on('error', $.util.log)
 				.pipe(source('main.js'))
 				.pipe(gulp.dest(options.dest))
-				.pipe(livereload())
-				.pipe(notify(function () {
-					console.log('APP bundle built in ' + (Date.now() - start) + 'ms');
+				.pipe($.livereload())
+				.pipe($.notify({
+					'onLast': true,
+					'message': 'APP bundle built in ' + (Date.now() - start) + 'ms'
 				}));
 		} else {
 			appBundler.bundle()
-				.on('error', gutil.log)
+				.on('error', $.util.log)
 				.pipe(source('main.js'))
 				.pipe(buffer())
-				// .pipe(uglify())	// this is failing with a JS_Parse_Error, can't figure out why
+				// .pipe($.uglify())	// this is failing with a JS_Parse_Error, can't figure out why
 				.pipe(gulp.dest(options.dest))
-				.pipe(notify(function () {
-					console.log('APP bundle built in ' + (Date.now() - start) + 'ms');
+				.pipe($.notify({
+					'onLast': true,
+					'message': 'APP bundle built in ' + (Date.now() - start) + 'ms'
 				}));
 		}
 
@@ -101,11 +100,14 @@ function browserifyTask (options) {
 		var start = new Date();
 		console.log('Building VENDORS bundle');
 		vendorsBundler.bundle()
-			.on('error', gutil.log)
+			.on('error', $.util.log)
 			.pipe(source('vendors.js'))
 			.pipe(gulp.dest(options.dest))
-			.pipe(notify(function () {
-				console.log('VENDORS bundle built in ' + (Date.now() - start) + 'ms');
+			.pipe($.notify({
+				'onLast': true,
+				'title': 'VENDORS bundle',
+				'message': 'built in ' + (Date.now() - start) + 'ms',
+				'notifier': function () {}
 			}));
 
 	}
@@ -118,32 +120,49 @@ function cssTask(options) {
 			var start = new Date();
 			console.log('Building CSS bundle');
 			gulp.src(options.src)
-				.pipe(sass())
+				.pipe($.sass())
 				.pipe(gulp.dest(options.dest))
-				.pipe(notify(function () {
-					console.log('CSS bundle built in ' + (Date.now() - start) + 'ms');
+				.pipe($.notify({
+					'onLast': true,
+					'title': 'CSS bundle',
+					'message': 'built in ' + (Date.now() - start) + 'ms',
+					'notifier': function () {}
 				}));
 		};
 		run();
 		gulp.watch(options.watchfiles, run);
 	} else {
 		gulp.src(options.src)
-			.pipe(sass())
-			.pipe(cssmin())
+			.pipe($.sass())
+			.pipe($.cssmin())
 			.pipe(gulp.dest(options.dest));
 	}
 }
 
 function copyTask(options) {
 	return gulp.src(options.src)
-				.pipe(copy(options.dest, {"prefix":1}));
+				.pipe($.copy(options.dest, {"prefix":1}));
+}
+
+function lintTask(options) {
+	console.log('ESLinting...');
+	return gulp.src(options.lintsrc)
+		.pipe($.eslint())
+		.pipe($.eslint.format())
+		.pipe($.eslint.failAfterError())	// Exit on lint error with code (1).
+		.pipe($.notify({
+			'onLast': true,
+			'title': 'Lint task',
+			'message': 'Linted.',
+			'notifier': function () {}
+		}));
 }
 
 function webserverTask(options) {
 	options = options || {}
 	var port = options.port || WEB_SERVER_PORT;
 
-	return connect.server({
+	return $.connect.server({
 		root: './build/',
 		port: port,
 		livereload: false
@@ -152,12 +171,12 @@ function webserverTask(options) {
 
 function staticFolder() {
 	return gulp.src("static/**")
-	.pipe(copy("build/"));
+	.pipe($.copy("build/"));
 }
 
 function staticDistFolder() {
 	return gulp.src("static/**")
-	.pipe(copy("./dist"));
+	.pipe($.copy("./dist"));
 }
 
 // Local development workflow:
@@ -174,6 +193,7 @@ gulp.task('default', function () {
 
 		browserifyTask({
 			"development" : true,
+			"lintsrc"           : 'src/**/*.js*',
 			"src"				: './src/main.jsx',
 			"dest"				: './build'
 		});
