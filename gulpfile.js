@@ -60,7 +60,7 @@ function browserifyTask (options) {
 				.pipe($.livereload())
 				.pipe($.notify({
 					'onLast': true,
-					'message': 'APP bundle built in ' + (Date.now() - start) + 'ms'
+					'message': function () { return 'APP bundle built in ' + (Date.now() - start) + 'ms'; }
 				}));
 		} else {
 			appBundler.bundle()
@@ -71,7 +71,7 @@ function browserifyTask (options) {
 				.pipe(gulp.dest(options.dest))
 				.pipe($.notify({
 					'onLast': true,
-					'message': 'APP bundle built in ' + (Date.now() - start) + 'ms'
+					'message': function () { return 'APP bundle built in ' + (Date.now() - start) + 'ms'; }
 				}));
 		}
 
@@ -106,7 +106,7 @@ function browserifyTask (options) {
 			.pipe($.notify({
 				'onLast': true,
 				'title': 'VENDORS bundle',
-				'message': 'built in ' + (Date.now() - start) + 'ms',
+				'message': function () { return 'built in ' + (Date.now() - start) + 'ms'; },
 				'notifier': function () {}
 			}));
 
@@ -125,7 +125,7 @@ function cssTask(options) {
 				.pipe($.notify({
 					'onLast': true,
 					'title': 'CSS bundle',
-					'message': 'built in ' + (Date.now() - start) + 'ms',
+					'message': function () { return 'built in ' + (Date.now() - start) + 'ms'; },
 					'notifier': function () {}
 				}));
 		};
@@ -153,7 +153,7 @@ function lintTask(options) {
 		.pipe($.notify({
 			'onLast': true,
 			'title': 'Lint task',
-			'message': 'Linted.',
+			'message': function () { return 'Linted.'; },
 			'notifier': function () {}
 		}));
 }
