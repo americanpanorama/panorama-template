@@ -141,7 +141,9 @@ function cssTask(options) {
 
 function copyTask(options) {
 	return gulp.src(options.src)
-				.pipe($.copy(options.dest, {"prefix":1}));
+			.pipe($.copy(options.dest, {
+				"prefix": options.pathDepth || 1
+			}));
 }
 
 function lintTask(options) {
@@ -187,8 +189,15 @@ gulp.task('default', function () {
 	rimraf("./build/**", function() {
 
 		copyTask({
-			"src" : "./src/*.html",
-			"dest" : "./build"
+			"src"               : "./src/*.html",
+			"dest"              : "./build"
+		});
+
+		copyTask({
+			// "src"               : "../panorama/dist/*.css*",
+			"src"               : "./node_modules/@panorama/toolkit/dist/*.css*",
+			"dest"              : "./build",
+			"pathDepth"         : 4
 		});
 
 		browserifyTask({
@@ -222,6 +231,12 @@ gulp.task('dist', function () {
 		copyTask({
 			"src" : "./src/*.html",
 			"dest" : "./dist"
+		});
+
+		copyTask({
+			"src"               : "./node_modules/@panorama/toolkit/dist/*.css*",
+			"dest"              : "./build",
+			"pathDepth"         : 4
 		});
 
 		browserifyTask({

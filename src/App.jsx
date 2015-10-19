@@ -3,8 +3,11 @@ import * as React from 'react';
 import { Map, TileLayer, GeoJson } from 'react-leaflet';
 
 // import example module from @panorama
-import Legend from '@panorama/legend';
-// import { Legend } from '@panorama/toolkit';
+import { Legend, Punchcard } from '@panorama/toolkit';
+
+// load from local copy of @panorama/toolkit repo.
+// for development of panorama-template and @panorama/toolkit only.
+// import { Legend, Punchcard } from '../../panorama/';
 
 /*
  * Data flow via Flux:
@@ -54,7 +57,61 @@ export default class App extends React.Component {
 			initialSelection: 'narratives'
 		},
 
-		exampleTitle: 'Example Component'
+		exampleTitle: 'Example Component',
+
+		punchcard: {
+			"header": {
+				"title": "Erie Canal",
+				"subtitle": 1850,
+				"caption": 1635089
+			},
+			"categories": [
+				{
+					"commodities": [
+						{
+							"name": "Wheat",
+							"value": 3670754,
+							"normalizedValue": 359733.892
+						}
+					],
+					"name": "Grains, Alcohol & Tobacco",
+					"aggregateNormalizedValue": 851316.2655
+				},
+				{
+					"commodities": [
+						{
+							"name": "Boards & scantling",
+							"value": 425095442,
+							"normalizedValue": 637643.163
+						},
+						{
+							"name": "Shingles",
+							"value": 58433000,
+							"normalizedValue": 29216.5
+						}
+					],
+					"name": "Building Materials",
+					"aggregateNormalizedValue": 666859.663
+				}
+			],
+			"items": [
+				{
+					"name": "Boards & scantling",
+					"value": 425095442,
+					"normalizedValue": 637643.163
+				},
+				{
+					"name": "Shingles",
+					"value": 58433000,
+					"normalizedValue": 29216.5
+				},
+				{
+					"name": "Wheat",
+					"value": 3670754,
+					"normalizedValue": 359733.892
+				}
+			]
+		}
 
 	};
 
@@ -185,7 +242,8 @@ export default class App extends React.Component {
 						</div>
 					</div>
 					<div className='columns four full-height'>
-						<div className='row top-row template-tile' style={{height: this.state.dimensions.upperRight.height + "px"}}>
+						<div className='row top-row template-tile' style={ { height: this.state.dimensions.upperRight.height + "px" } }>
+							<Punchcard header={ this.props.punchcard.header } categories={ this.props.punchcard.categories } items={ this.props.punchcard.items }/>
 						</div>
 						<div className='row bottom-row template-tile'>
 							<h2>Imported component:</h2>
