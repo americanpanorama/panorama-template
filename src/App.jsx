@@ -4,6 +4,7 @@ import { Map, TileLayer, GeoJson } from 'react-leaflet';
 
 // import example module from @panorama
 import Legend from '@panorama/legend';
+// import { Legend } from '@panorama/toolkit';
 
 /*
  * Data flow via Flux:
