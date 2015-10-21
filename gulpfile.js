@@ -7,7 +7,7 @@ var gulp             = require('gulp'),
     parcelify        = require('parcelify'),
     glob             = require('glob'),
     rimraf           = require("rimraf"),
-    gulpLoadPlugins  = require('gulp-load-plugins');
+    gulpLoadPlugins  = require('gulp-load-plugins'),
     exec             = require('child_process').exec;
  
 // Automatically load any gulp plugins in your package.json
@@ -253,6 +253,8 @@ gulp.task('dist', function () {
 			"dest"              : "./build",
 			"pathDepth"         : 4
 		});
+
+		basemapsTask();
 
 		browserifyTask({
 			"development" : false,

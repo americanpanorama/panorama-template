@@ -33,6 +33,16 @@ Create a `config.json` file from `config.json.sample` in `./basemaps/cartodb` an
 **Note:** using `apiKey` will append the specified API key as a query param on all requests to CartoDB. This is insecure and is not intended for production! We need to decide on a technique that either uses materialized tables or an authenticated session before going live.
 
 
+Specify queries needed for basemap layers in `./basemaps`:
+1. Write terrain URLs to `./basemaps/tileLayers.json`
+2. Set up CartoDB basemaps:
+	A. Specify layers in `./basemaps/cartodb/basemaps.yml`
+	B. Specify SQL queries per layer in `./basemaps/cartodb/layers.yml`
+	C. Define layer styles ass `.mss` files within `./basemaps/cartodb/styles`
+
+####TODO: Alan may want to add more here, about CartoDB map JSON format, cartodb-yaml, or other things...
+
+
 ## Develop
 To run locally:
 

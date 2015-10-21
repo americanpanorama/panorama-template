@@ -10,6 +10,13 @@ import { PropTypes } from 'react';
 import { tileLayer } from 'leaflet';
 import { BaseTileLayer } from 'react-leaflet';
 
+// Not possible until CartoDB releases an npm package for the Core API.
+// import { Tiles } from 'cartodb';
+
+// Until then, consumer applications must include the cartodb.js script elsewhere,
+// e.g. in index.html as <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.core.js"></script>
+const Tiles = cartodb.Tiles;
+
 
 export default class CartoDBTileLayer extends BaseTileLayer {
 
@@ -35,9 +42,7 @@ export default class CartoDBTileLayer extends BaseTileLayer {
 	}
 
 	_getCartoDBTilesTemplates (callback) {
-		// cartodb is a global, defined by cartodb.js, loaded in index.html
-		// TODO: `npm install cartodb` instead of including as <script>
-		cartodb.Tiles.getTiles({
+		Tiles.getTiles({
 			type: 'cartodb',
 			user_name: this.props.userId,
 			sublayers: [{
