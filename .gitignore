@@ -37,4 +37,4 @@ node_modules
 .sass-cache
 
 # misc project-specifics
-.env.json
+basemaps/cartodb/config.json

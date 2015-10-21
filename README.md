@@ -19,21 +19,13 @@ Load required **npm** modules.
 npm install
 ```
 
-Create a `.env.json` file from `.env.json.sample` in **root** directory and add your CartoDB account name to the `.env.json` file. Will look like this...
+If you're using CartoDB, either for data requests or basemaps:
+Create a `config.json` file from `config.json.sample` in `./basemaps/cartodb` and add your CartoDB account name to the file. Will look like this...
 
 ```json
 {
-	"cartodb": {
-		"userId": "[CartoDB user id / account name]",
-		"apiKey": "[CartoDB API key]",
-		"layers": [
-			{
-				"url": "http://ec2-52-3-95-39.compute-1.amazonaws.com/richmond-terrain/{z}/{x}/{y}.png",
-				"sql": "SELECT * FROM unified_basemap_layers order by ord",
-				"cartocss": "[Any required custom CartoCSS]"
-			}
-		]
-	}
+	"userId": "[CartoDB user id / account name]",
+	"apiKey": "[CartoDB API key]"
 }
 ```
 

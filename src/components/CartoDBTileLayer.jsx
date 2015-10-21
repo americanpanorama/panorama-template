@@ -8,19 +8,21 @@
 
 import { PropTypes } from 'react';
 import { tileLayer } from 'leaflet';
-
 import { BaseTileLayer } from 'react-leaflet';
 
 
 export default class CartoDBTileLayer extends BaseTileLayer {
+
 	static propTypes = {
-		url: PropTypes.string.isRequired,
+		userId: PropTypes.string,
+		sql: PropTypes.string,
+		cartocss: PropTypes.string
 	};
 
-	componentWillMount() {
+	componentWillMount () {
+
 		super.componentWillMount();
-		const { map, url, ...props } = this.props;
-		this.leafletElement = tileLayer(url, props);
+		this.leafletElement = tileLayer('', this.props);
 
 		this._getCartoDBTilesTemplates(function (error, response) {
 			if (error) {
@@ -32,14 +34,7 @@ export default class CartoDBTileLayer extends BaseTileLayer {
 		}.bind(this));
 	}
 
-	componentDidUpdate(prevProps) {
-		const { url } = this.props;
-		if (url && url !== prevProps.url) {
-			this.leafletElement.setUrl(url);
-		}
-	}
-
-	_getCartoDBTilesTemplates(callback) {
+	_getCartoDBTilesTemplates (callback) {
 		// cartodb is a global, defined by cartodb.js, loaded in index.html
 		// TODO: `npm install cartodb` instead of including as <script>
 		cartodb.Tiles.getTiles({
@@ -53,9 +48,13 @@ export default class CartoDBTileLayer extends BaseTileLayer {
 
 		function (tiles, error) {
 			if (!tiles || error) {
+				if (!error) {
+					error = "Empty response.";
+				}
 				callback(error, tiles);
+			} else {
+				callback(null, tiles);
 			}
-			callback(null, tiles);
 		});
 	}
 

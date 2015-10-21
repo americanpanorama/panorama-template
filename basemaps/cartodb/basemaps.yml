@@ -1,0 +1,7 @@
+name: PanoramaBasemap
+minzoom: 2
+maxzoom: 9
+
+layers:
+  - unified_basemap_layers:
+  - canal_towns:

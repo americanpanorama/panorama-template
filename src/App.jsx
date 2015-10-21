@@ -20,16 +20,17 @@ import { Legend, Punchcard } from '@panorama/toolkit';
 
 // components (views)
 import ExampleComponent from './components/ExampleComponent.jsx';
-// TODO: can component require css instead of having that happen elsewhere? more modular.
-// (if i get this to work, make it happen for legend component too?)
 
-// 
+// TODO: move this to another repo, probably @panorama/toolkit
 import CartoDBTileLayer from './components/CartoDBTileLayer.jsx';
 
 // utils
-import config from '../.env.json';
-import AppDispatcher from './utils/AppDispatcher';
 import { ExampleActions } from './utils/AppActionCreator';
+
+// config
+import tileLayers from '../basemaps/tileLayers.json';
+import cartodbConfig from '../basemaps/cartodb/config.json';
+import cartodbLayers from '../basemaps/cartodb/basemaps.json';
 
 
 
@@ -228,12 +229,24 @@ export default class App extends React.Component {
 								center={loc}
 								zoom={zoom}
 							>
-								<CartoDBTileLayer
-									url={config.cartodb.layers[0].url}
-									userId={config.cartodb.userId}
-									sql={config.cartodb.layers[0].sql}
-									cartocss={config.cartodb.layers[0].cartocss}
-								/>
+							{ cartodbLayers.layergroup.layers.map((item, i) => {
+								return (
+									<CartoDBTileLayer
+										key={ i }
+										userId={ cartodbConfig.userId }
+										sql={ item.options.sql }
+										cartocss={ item.options.cartocss }
+									/>
+								);
+							}) }
+							{ tileLayers.layers.map((item, i) => {
+								return (
+									<TileLayer
+										key={ i }
+										url={ item.url }
+									/>
+								);
+							}) }
 							</Map>
 						</div>
 						<div className='row bottom-row template-tile'>
