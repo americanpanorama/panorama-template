@@ -34,13 +34,14 @@ Create a `config.json` file from `config.json.sample` in `./basemaps/cartodb` an
 
 
 Specify queries needed for basemap layers in `./basemaps`:
+
 1. Write terrain URLs to `./basemaps/tileLayers.json`
 2. Set up CartoDB basemaps:
 	A. Specify layers in `./basemaps/cartodb/basemaps.yml`
 	B. Specify SQL queries per layer in `./basemaps/cartodb/layers.yml`
 	C. Define layer styles ass `.mss` files within `./basemaps/cartodb/styles`
 
-####TODO: Alan may want to add more here, about CartoDB map JSON format, cartodb-yaml, or other things...
+For more information about customizing your application's basemaps, see the [README](basemaps/README.md) in the basemap directory.
 
 
 ## Develop
