@@ -12,3 +12,8 @@ Currently sourced from Stamen's OpenTerrain project. XYZ url template for this l
 ### The CartoDB tile layer
 
 #### TODO: more info here
+
+ * What to do in the .yml files
+ * How to debug with Tessera
+ * How to develop using CartoDB Editor
+ * How to organize your CartoDB tables, reproject them, and make them public
