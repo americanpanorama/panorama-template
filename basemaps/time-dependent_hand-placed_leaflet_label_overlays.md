@@ -18,6 +18,8 @@ The `maptype` field within the `properties` collection determines whether a GeoJ
 
 ## Format
 
+**Documentation in progress**
+
 ```
   "type": "FeatureCollection",
   "features": [
