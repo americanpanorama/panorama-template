@@ -12,13 +12,24 @@ Finally, we want control over which labels show at which zoom levels.
 
 We use a GeoJSON file with specific fields that specify how and when to draw the label. So far we support three types of features in this file: marker points, labels, and optional leader lines (a thin line drawn between the marker and the label, making it possible to move the label text further away from the marker if necessary)
 
-The `maptype` field within the `properties` collection determines whether a GeoJSON feature should be interpreted as a point, a label, or a leader line.
+The `maptype` field within the `properties` collection determines whether a GeoJSON feature should be interpreted as a point, a label, or a leader line. These are separate features within the GeoJSON file, but they each represent different parts of a single map feature. The city of Sacramento might have a point, a label, and a leader line in the same GeoJSON file.
+
+Each feature also has `type`, which can be used for different categorical styling. In the "Overland Trails" map, `type` has three possible values: `place` for cities (show in black), `fort` (show in brown), or `natural` (show in green).
+
+There is also a `startzoom` and `endzoom` for each feature. If you want to style a feature differently at different zooms, (for example, draw the Sacramento label with left justification up to zoom 5, and draw it right justified with a leader line after zoom 6), you need to represent these as separate features in the GeoJSON file with non-overlapping zoom levels.
+
+Each feature has a `start_year` and `end_year` which is in an ugly format like this `1871-05-22T00:00:00Z`.
+
+Finally, all the label features have a `justify` field which is either `left` or `right`.
 
 [include screenshots]
 
-## Format
+## Example file structure
 
 **Documentation in progress**
+
+There is currently no too that automatically generates this file. You need to export your features as a GeoJSON, and then manually add the necessary attributes to this file.
+
 
 ```
   "type": "FeatureCollection",
@@ -26,18 +37,12 @@ The `maptype` field within the `properties` collection determines whether a GeoJ
       {
       "type": "Feature",
       "properties": {
-        "cartodb_id": 8,
         "start_year": null,
         "end_year": null,
-        "landmark_i": "17",
         "location": "Independence Rock",
-        "trail": "Oregon Trail",
         "type": "natural",
-        "latitude": 42.4936,
-        "longitude": -107.1294,
         "maptype": "icon",
         "startzoom": 5,
-        "justify": null,
         "endzoom": 10
       },
       "geometry": {
@@ -53,12 +58,9 @@ The `maptype` field within the `properties` collection determines whether a GeoJ
     {
       "type": "Feature",
       "properties": {
-        "cartodb_id": 8,
         "start_year": null,
         "end_year": null,
-        "landmark_i": "17",
         "location": "Independence Rock",
-        "trail": "Oregon Trail",
         "type": "natural",
         "maptype": "line",
         "startzoom": 5,
@@ -81,15 +83,11 @@ The `maptype` field within the `properties` collection determines whether a GeoJ
     {
       "type": "Feature",
       "properties": {
-        "cartodb_id": 8,
         "start_year": null,
         "end_year": null,
-        "landmark_i": "17",
         "location": ". Independence Rock",
         "trail": "Oregon Trail",
         "type": "natural",
-        "latitude": 42.4936,
-        "longitude": -107.1294,
         "maptype": "label",
         "startzoom": 7,
         "justify": "left",
