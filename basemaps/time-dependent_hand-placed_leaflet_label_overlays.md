@@ -30,6 +30,8 @@ Finally, all the label features have a `justify` field which is either `left` or
 
 There is currently no too that automatically generates this file. You need to export your features as a GeoJSON, and then manually add the necessary attributes to this file.
 
+NOTE: In the Overland Trails map the point features were defined as `MultiPoint` geometry type. This component will require point features to be `Point` only and leader lines to be `Line` only. **TODO** the code should enforce this.
+
 
 ```
   "type": "FeatureCollection",
