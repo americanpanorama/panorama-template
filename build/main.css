@@ -820,25 +820,32 @@ body,
 html {
   height: 100%;
   width: 100%;
-  background-color: white; }
+  background-color: whitesmoke; }
 
 body {
-  line-height: 1.0;
+  line-height: 1.0; }
+
+body,
+svg text {
   /* ----------- Phones ----------- */
   /* ----------- Tablets ----------- */
   /* ----------- Non-Retina Screens ----------- */
   /* ----------- Retina Screens ----------- */ }
   @media screen and (max-width: 750px) {
-    body {
+    body,
+    svg text {
       font-size: 16px; } }
   @media screen and (min-width: 750px) and (max-width: 1280px) {
-    body {
+    body,
+    svg text {
       font-size: 20px; } }
   @media screen and (min-width: 1280px) and (-webkit-min-device-pixel-ratio: 1) {
-    body {
+    body,
+    svg text {
       font-size: 24px; } }
   @media screen and (min-width: 1280px) and (-webkit-min-device-pixel-ratio: 2) and (min-resolution: 192dpi) {
-    body {
+    body,
+    svg text {
       font-size: 24px; } }
 
 h1 {
@@ -858,6 +865,12 @@ h5 {
 
 h6 {
   font-size: 0.35em; }
+
+a:link,
+a:over,
+a:hover,
+a:active {
+  color: #207a9e; }
 
 .container {
   padding: 20px; }
@@ -890,21 +903,34 @@ h6 {
     right: 0.2em;
     bottom: 0.2em;
     left: 0.2em;
-    border: solid 2px #cdcdcd;
+    border: solid 2px #e1e1e1;
     pointer-events: none; }
 
 .top-row {
   margin-bottom: 20px; }
 
 .bottom-row {
-  height: 230px; }
+  /* ----------- Tablets and below ----------- */
+  /* ----------- Desktop and above ----------- */ }
+  @media screen and (min-width: 750px) and (max-width: 1280px) {
+    .bottom-row {
+      height: 230px; } }
+  @media screen and (min-width: 1280px) {
+    .bottom-row {
+      height: 310px; } }
 
 header {
   position: relative;
-  height: 80px;
-  padding-top: 10px; }
+  height: 90px; }
   header h1 {
     margin: 0; }
+  header h4 {
+    display: inline-block;
+    position: relative;
+    top: -0.25em;
+    margin: 0 0 0 0.3em;
+    font-size: 0.66667em;
+    cursor: pointer; }
   header .header-sub {
     font-size: 0.7em;
     margin-left: 0.9em; }
@@ -913,7 +939,37 @@ header {
   width: 100%;
   height: 100%; }
 
-header .header-main {
+.ReactModalPortal .ReactModal__Overlay {
+  z-index: 2000;
+  background-color: rgba(51, 51, 51, 0.25); }
+
+.ReactModalPortal .ReactModal__Content {
+  position: absolute;
+  width: 30em;
+  top: 2em;
+  bottom: 2em;
+  padding: 2.5em;
+  left: 50%;
+  margin-left: -15em;
+  background-color: whitesmoke;
+  line-height: 0.9em; }
+  .ReactModalPortal .ReactModal__Content li {
+    list-style-type: none; }
+  .ReactModalPortal .ReactModal__Content p, .ReactModalPortal .ReactModal__Content ul {
+    font-size: 0.7em; }
+  .ReactModalPortal .ReactModal__Content h1, .ReactModalPortal .ReactModal__Content h2, .ReactModalPortal .ReactModal__Content h3, .ReactModalPortal .ReactModal__Content h4, .ReactModalPortal .ReactModal__Content h5, .ReactModalPortal .ReactModal__Content h6 {
+    text-transform: uppercase; }
+  .ReactModalPortal .ReactModal__Content button.close {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    border: none;
+    background: none;
+    padding: 0; }
+    .ReactModalPortal .ReactModal__Content button.close span {
+      font-size: 2.25em; }
+
+header .header-main, .ReactModalPortal .ReactModal__Content h1, .ReactModalPortal .ReactModal__Content h2, .ReactModalPortal .ReactModal__Content h3, .ReactModalPortal .ReactModal__Content h4, .ReactModalPortal .ReactModal__Content h5, .ReactModalPortal .ReactModal__Content h6 {
   font-family: 'Merriweather', serif;
   font-weight: 300;
   color: #454545; }
@@ -923,7 +979,8 @@ header .header-sub {
   font-weight: 100;
   color: #454545; }
 
-body {
+body,
+svg text, .ReactModalPortal .ReactModal__Content p, .ReactModalPortal .ReactModal__Content ul {
   font-family: 'Lato', sans-serif;
   font-weight: 300;
   color: #454545; }

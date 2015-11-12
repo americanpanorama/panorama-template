@@ -29,7 +29,8 @@
     "leaflet": "^0.7.5",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
-    "react-leaflet": "^0.8.0"
+    "react-leaflet": "^0.8.0",
+    "react-modal": "^0.6.1"
   },
   "devDependencies": {
     "babel-eslint": "^4.1.3",
