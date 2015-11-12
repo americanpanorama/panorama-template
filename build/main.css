@@ -197,9 +197,7 @@ button {
   cursor: pointer;
   box-sizing: border-box; }
 
-input[type="submit"],
-input[type="reset"],
-input[type="button"] {
+input[type="submit"], input[type="reset"], input[type="button"] {
   display: inline-block;
   height: 38px;
   padding: 0 30px;
@@ -224,9 +222,7 @@ button:hover {
   border-color: #888888;
   outline: 0; }
 
-input[type="submit"]:hover,
-input[type="reset"]:hover,
-input[type="button"]:hover {
+input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover {
   color: #333;
   border-color: #888888;
   outline: 0; }
@@ -237,9 +233,7 @@ button:focus {
   border-color: #888888;
   outline: 0; }
 
-input[type="submit"]:focus,
-input[type="reset"]:focus,
-input[type="button"]:focus {
+input[type="submit"]:focus, input[type="reset"]:focus, input[type="button"]:focus {
   color: #333;
   border-color: #888888;
   outline: 0; }
@@ -250,9 +244,7 @@ button.button-primary {
   background-color: #33c3f0;
   border-color: #33c3f0; }
 
-input[type="submit"].button-primary,
-input[type="reset"].button-primary,
-input[type="button"].button-primary {
+input[type="submit"].button-primary, input[type="reset"].button-primary, input[type="button"].button-primary {
   color: #fff;
   background-color: #33c3f0;
   border-color: #33c3f0; }
@@ -263,9 +255,7 @@ button.button-primary:hover {
   background-color: #1eaedb;
   border-color: #1eaedb; }
 
-input[type="submit"].button-primary:hover,
-input[type="reset"].button-primary:hover,
-input[type="button"].button-primary:hover {
+input[type="submit"].button-primary:hover, input[type="reset"].button-primary:hover, input[type="button"].button-primary:hover {
   color: #fff;
   background-color: #1eaedb;
   border-color: #1eaedb; }
@@ -276,20 +266,12 @@ button.button-primary:focus {
   background-color: #1eaedb;
   border-color: #1eaedb; }
 
-input[type="submit"].button-primary:focus,
-input[type="reset"].button-primary:focus,
-input[type="button"].button-primary:focus {
+input[type="submit"].button-primary:focus, input[type="reset"].button-primary:focus, input[type="button"].button-primary:focus {
   color: #fff;
   background-color: #1eaedb;
   border-color: #1eaedb; }
 
-input[type="email"],
-input[type="number"],
-input[type="search"],
-input[type="text"],
-input[type="tel"],
-input[type="url"],
-input[type="password"] {
+input[type="email"], input[type="number"], input[type="search"], input[type="text"], input[type="tel"], input[type="url"], input[type="password"] {
   height: 38px;
   padding: 6px 10px;
   background-color: #fff;
@@ -308,13 +290,7 @@ select {
   box-shadow: none;
   box-sizing: border-box; }
 
-input[type="email"],
-input[type="number"],
-input[type="search"],
-input[type="text"],
-input[type="tel"],
-input[type="url"],
-input[type="password"] {
+input[type="email"], input[type="number"], input[type="search"], input[type="text"], input[type="tel"], input[type="url"], input[type="password"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none; }
@@ -327,13 +303,7 @@ textarea {
   padding-top: 6px;
   padding-bottom: 6px; }
 
-input[type="email"]:focus,
-input[type="number"]:focus,
-input[type="search"]:focus,
-input[type="text"]:focus,
-input[type="tel"]:focus,
-input[type="url"]:focus,
-input[type="password"]:focus {
+input[type="email"]:focus, input[type="number"]:focus, input[type="search"]:focus, input[type="text"]:focus, input[type="tel"]:focus, input[type="url"]:focus, input[type="password"]:focus {
   border: 1px solid #33c3f0;
   outline: 0; }
 
@@ -352,8 +322,7 @@ fieldset {
   padding: 0;
   border-width: 0; }
 
-input[type="checkbox"],
-input[type="radio"] {
+input[type="checkbox"], input[type="radio"] {
   display: inline; }
 
 label > .label-body {
@@ -384,8 +353,8 @@ li {
   margin-bottom: 1rem; }
 
 code {
-  padding: 0.2rem 0.5rem;
-  margin: 0 0.2rem;
+  padding: .2rem .5rem;
+  margin: 0 .2rem;
   font-size: 90%;
   white-space: nowrap;
   background: #f1f1f1;
@@ -698,7 +667,8 @@ select {
  *    `input` and others.
  */
 button,
-html input[type="button"], input[type="reset"],
+html input[type="button"],
+input[type="reset"],
 input[type="submit"] {
   -webkit-appearance: button;
   /* 2 */
@@ -866,10 +836,7 @@ h5 {
 h6 {
   font-size: 0.35em; }
 
-a:link,
-a:over,
-a:hover,
-a:active {
+a:link, a:over, a:hover, a:active {
   color: #207a9e; }
 
 .container {

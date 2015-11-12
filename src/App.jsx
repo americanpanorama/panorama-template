@@ -248,7 +248,7 @@ export default class App extends React.Component {
 
 			modalStyle = {
 				overlay : {
-					backgroundColor: ''
+					backgroundColor: null
 				},
 				content : {
 					top: null,
