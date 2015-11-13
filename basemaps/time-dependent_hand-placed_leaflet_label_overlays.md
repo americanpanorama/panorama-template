@@ -7,7 +7,7 @@ Panorama projects frequently need to have labels that change over time. For exam
 Also, because these labels are usually small in number but large in importance, we want to have full control over their placement. For example, we might always want to have Sacramento's label to the left of the icon, because we know that it won't conflict with other features we want to show on the map.
 
 Finally, we want control over which labels show at which zoom levels. 
-
+n
 ## What is the solution?
 
 We use a GeoJSON file with specific fields that specify how and when to draw the label. So far we support three types of features in this file: marker points, labels, and optional leader lines (a thin line drawn between the marker and the label, making it possible to move the label text further away from the marker if necessary)
@@ -28,7 +28,7 @@ Finally, all the label features have a `justify` field which is either `left` or
 
 **Documentation in progress**
 
-There is currently no too that automatically generates this file. You need to export your features as a GeoJSON, and then manually add the necessary attributes to this file.
+There is currently no tool that automatically generates this file. You need to export your features as a GeoJSON, and then manually add the necessary attributes to this file.
 
 NOTE: In the Overland Trails map the point features were defined as `MultiPoint` geometry type. This component will require point features to be `Point` only and leader lines to be `Line` only. **TODO** the code should enforce this.
 
