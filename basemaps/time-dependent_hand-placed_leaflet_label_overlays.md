@@ -18,7 +18,7 @@ Each feature also has `type`, which can be used for different categorical stylin
 
 There is also a `startzoom` and `endzoom` for each feature. If you want to style a feature differently at different zooms, (for example, draw the Sacramento label with left justification up to zoom 5, and draw it right justified with a leader line after zoom 6), you need to represent these as separate features in the GeoJSON file with non-overlapping zoom levels.
 
-Each feature has a `start_year` and `end_year` which is in an ugly format like this `1871-05-22T00:00:00Z`.
+Each feature has a `start_year` and `end_year` which is in an ugly format (aka [ISO-8601 UTC](https://en.wikipedia.org/wiki/ISO_8601#UTC)) like this `1871-05-22T00:00:00Z`.
 
 Finally, all the label features have a `justify` field which is either `left` or `right`.
 
