@@ -11,6 +11,9 @@ Boilerplate and starting point for creating new applications using the [Panorama
 
 
 ##Setup
+
+#### 1. Install dependencies
+
 Make sure you have [npm](https://www.npmjs.com/) installed. Note: **version > 2.7.0 is required** to install scoped packages, such as `@panorama/toolkit`. Instructions for updating npm are [here](https://docs.npmjs.com/getting-started/installing-node#updating-npm).
 
 Load required **npm** modules.
@@ -18,6 +21,8 @@ Load required **npm** modules.
 ```bash
 npm install
 ```
+
+#### 2. Set up basemaps
 
 If you're using CartoDB, either for data requests or basemaps:
 Create a `config.json` file from `config.json.sample` in `./basemaps/cartodb` and add your CartoDB account name to the file. Will look like this...
