@@ -17,7 +17,7 @@ var $ = gulpLoadPlugins();
 // but include in your application deployment
 var dependencies = [
 	'react',
-	'flux'
+	'react-dom'
 ];
 
 var WEB_SERVER_PORT = 8888;
