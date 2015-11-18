@@ -148,12 +148,6 @@ header {
 	.header-main {
 		@extend %merriweather-light;
 	}
-
-	.header-sub {
-		@extend %lato-thin;
-		font-size: 0.7em;
-		margin-left: 0.9em;
-	}
 }
 
 .leaflet-container {

@@ -898,9 +898,6 @@ header {
     margin: 0 0 0 0.3em;
     font-size: 0.66667em;
     cursor: pointer; }
-  header .header-sub {
-    font-size: 0.7em;
-    margin-left: 0.9em; }
 
 .leaflet-container {
   width: 100%;
@@ -939,11 +936,6 @@ header {
 header .header-main, .ReactModalPortal .ReactModal__Content h1, .ReactModalPortal .ReactModal__Content h2, .ReactModalPortal .ReactModal__Content h3, .ReactModalPortal .ReactModal__Content h4, .ReactModalPortal .ReactModal__Content h5, .ReactModalPortal .ReactModal__Content h6 {
   font-family: 'Merriweather', serif;
   font-weight: 300;
-  color: #454545; }
-
-header .header-sub {
-  font-family: 'Lato', sans-serif;
-  font-weight: 100;
   color: #454545; }
 
 body,

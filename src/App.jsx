@@ -271,7 +271,7 @@ class App extends React.Component {
 				<div className='row full-height'>
 					<div className='columns eight left-column full-height'>
 						<header className='row u-full-width'>
-							<h1><span className='header-main'>CANALS</span><span className='header-sub'>1820&ndash;1860</span></h1>
+							<h1><span className='header-main'>PANORAMA TEMPLATE</span></h1>
 							<h4 onClick={ this.toggleAbout }>ABOUT THIS MAP</h4>
 						</header>
 						<div className='row top-row template-tile' style={ { height: this.state.dimensions.upperLeft.height + "px" } }>
