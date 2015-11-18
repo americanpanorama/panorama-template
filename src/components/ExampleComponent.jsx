@@ -2,21 +2,29 @@ import * as React from 'react';
 import ExampleStore from '../stores/ExampleStore';
 import { AppActionTypes } from '../utils/AppActionCreator';
 
-
+/**
+ * An extremely minimal component,
+ * designed as boilerplate for new components
+ * and to demonstrate data flow through a React/Flux application.
+ */
 export default class ExampleComponent extends React.Component {
 
-	constructor () {
+	// property validation
+	static propTypes = {
+		title: React.PropTypes.string,
+		loading: React.PropTypes.bool
+	};
 
-		super();
+	// property defaults (ES7-style React)
+	// (instead of ES5-style getDefaultProps)
+	static defaultProps = {
+		title: 'Default Title',
+		loading: true
+	};
 
-		// set up initial state (instead of ES5-style getInitialState)
-		this.state = {
-			initialDataLoaded: false
-		};
+	constructor (props) {
 
-		// bind handlers to this component instance,
-		// since React no longer does this automatically when using ES6
-		this.storeChanged = this.storeChanged.bind(this);
+		super(props);
 
 	}
 
@@ -28,14 +36,13 @@ export default class ExampleComponent extends React.Component {
 
 	componentDidMount () {
 
-		// Listen for data changes
-		ExampleStore.addListener(AppActionTypes.storeChanged, this.storeChanged);
+		//
 
 	}
 
 	componentWillUnmount () {
 
-		ExampleStore.removeListener(AppActionTypes.storeChanged, this.storeChanged);
+		//
 
 	}
 
@@ -49,37 +56,11 @@ export default class ExampleComponent extends React.Component {
 
 		return (
 			<div className='example-component'>
-				<h3>{this.props.title}</h3>
-				<p>Initial data load {this.state.initialDataLoaded ? 'complete!' : 'pending...'}</p>
+				<h3>{ this.props.title }</h3>
+				<p>Initial data load { this.props.loading ? 'pending...' : 'complete!' }</p>
 			</div>
 		);
 
 	}
 
-	storeChanged () {
-
-		console.log(`[4] The data requested on app init land in the view that will render them, in ExampleComponent.storeChanged(). A setState() call updates the data and triggers a render().`);
-
-		// setState with the updated data, which causes a re-render()
-		this.setState({
-			initialDataLoaded: true
-		});
-
-	}
-
 }
-
-// property validation
-ExampleComponent.propTypes = {
-
-	title: React.PropTypes.string
-
-};
-
-// property defaults
-// (instead of ES5-style getDefaultProps)
-ExampleComponent.defaultProps = {
-
-	title: 'Default Title'
-
-};

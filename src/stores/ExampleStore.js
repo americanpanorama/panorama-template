@@ -2,27 +2,33 @@ import { EventEmitter } from 'events';
 import AppDispatcher from '../utils/AppDispatcher';
 import { AppActionTypes } from '../utils/AppActionCreator';
 
-// TODO: load this in as a panorama module
-// import CartoDBLoader from '../utils/CartoDBLoader';
+import sampleData from '../../static/sampleData.json';
+
 
 const ExampleStore = {
 
-	data: [],
+	data: null,
 
-	// dataLoader: CartoDBLoader,
-
-	// Sample data loader, with setTimeout
-	// emulating network response delay
+	/**
+	 * Sample data loader, with setTimeout
+	 * emulating network response delay,
+	 * returning sample data from a local json file.
+	 * A real data loader would follow the same pattern,
+	 * but probably make an XHR and return the response data.
+	 */
 	dataLoader: {
 		query: (value) => {
 			return new Promise((resolve, reject) => {
 				setTimeout(() => {
-					return resolve(value);
+					return resolve(sampleData);
 				}, 1000);
 			});
 		}
 	},
 
+	/**
+	 * Make a request for data needed on application init.
+	 */
 	getInitialData: function () {
 
 		console.log(`[3b] ExampleStore makes a data request...`);
@@ -48,18 +54,38 @@ const ExampleStore = {
 
 	},
 
-	setData: function (...data) {
+	/**
+	 * Retrieve data from the store.
+	 */
+	getData: function () {
 
-		// TODO: implement (update cached data)
+		// For simplicity of example, we return all of the data.
+		// A real application would more likely return a copy
+		// (to avoid accidental mutation by consumers) 
+		// of a subset of the data.
+		return this.data;
+
+	},
+
+	/**
+	 * Cache the loaded, parsed data for future use by the application.
+	 */
+	setData: function (data) {
+
+		this.data = data;
 
 		console.log(`[3b] ExampleStore updates its cache with the loaded and parsed data, and emits a '${ AppActionTypes.storeChanged }' event from ExampleStore.setData().`);
 		this.emit(AppActionTypes.storeChanged);
 
 	},
 
+	/**
+	 * Parse returned data as necessary.
+	 */
 	parseData: function (...data) {
 
-		//
+		let firstResponse = data[0];
+		return firstResponse;
 
 	}
 

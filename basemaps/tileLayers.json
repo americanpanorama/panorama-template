@@ -1,7 +1,7 @@
 {
 	"layers": [
 		{
-			"url": "http://ec2-54-174-39-10.compute-1.amazonaws.com/richmond-terrain/{z}/{x}/{y}.png"
+			"url": "http://sm.mapstack.stamen.com/openterrain_2163/{z}/{x}/{y}.png"
 		}
 	]
 }

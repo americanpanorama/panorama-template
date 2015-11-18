@@ -19,14 +19,18 @@ import { Legend, Punchcard } from '@panorama/toolkit';
  * actions --> dispatcher --> stores --> views
  */
 
-// components (views)
+// stores
+import ExampleStore from './stores/ExampleStore';
+
+// local (not installed via npm) components (views)
 import ExampleComponent from './components/ExampleComponent.jsx';
 
 // TODO: move this to another repo, probably @panorama/toolkit
 import CartoDBTileLayer from './components/CartoDBTileLayer.jsx';
 
 // utils
-import { ExampleActions } from './utils/AppActionCreator';
+import AppDispatcher from './utils/AppDispatcher';
+import { AppActionTypes, ExampleActions } from './utils/AppActionCreator';
 
 // config
 import tileLayers from '../basemaps/tileLayers.json';
@@ -34,88 +38,8 @@ import cartodbConfig from '../basemaps/cartodb/config.json';
 import cartodbLayers from '../basemaps/cartodb/basemaps.json';
 
 
-
 // main app container
-export default class App extends React.Component {
-
-	// property validation (ES7-style React)
-	static propTypes = {
-
-		legendData: React.PropTypes.object,
-		exampleTitle: React.PropTypes.string,
-
-	};
-
-	// property defaults (ES7-style React)
-	// (instead of ES5-style getDefaultProps)
-	static defaultProps = {
-
-		legendData: {
-			items: [
-				'narratives',
-				'cotton',
-				'sugar'
-			],
-			initialSelection: 'narratives'
-		},
-
-		exampleTitle: 'Example Component',
-
-		punchcard: {
-			"header": {
-				"title": "Erie Canal",
-				"subtitle": 1850,
-				"caption": 1635089
-			},
-			"categories": [
-				{
-					"commodities": [
-						{
-							"name": "Wheat",
-							"value": 3670754,
-							"normalizedValue": 359733.892
-						}
-					],
-					"name": "Grains, Alcohol & Tobacco",
-					"aggregateNormalizedValue": 851316.2655
-				},
-				{
-					"commodities": [
-						{
-							"name": "Boards & scantling",
-							"value": 425095442,
-							"normalizedValue": 637643.163
-						},
-						{
-							"name": "Shingles",
-							"value": 58433000,
-							"normalizedValue": 29216.5
-						}
-					],
-					"name": "Building Materials",
-					"aggregateNormalizedValue": 666859.663
-				}
-			],
-			"items": [
-				{
-					"name": "Boards & scantling",
-					"value": 425095442,
-					"normalizedValue": 637643.163
-				},
-				{
-					"name": "Shingles",
-					"value": 58433000,
-					"normalizedValue": 29216.5
-				},
-				{
-					"name": "Wheat",
-					"value": 3670754,
-					"normalizedValue": 359733.892
-				}
-			]
-		}
-
-	};
+class App extends React.Component {
 
 	constructor (props) {
 
@@ -127,61 +51,17 @@ export default class App extends React.Component {
 
 		// bind handlers to this component instance,
 		// since React no longer does this automatically when using ES6
-		this.onMapMove = this.onMapMove.bind(this);
+		this.storeChanged = this.storeChanged.bind(this);
 		this.onWindowResize = this.onWindowResize.bind(this);
 		this.toggleAbout = this.toggleAbout.bind(this);
 
 	}
 
-	componentWillMount () {
 
-		this.computeComponentDimensions();
 
-	}
-
-	componentDidMount () {
-
-		window.addEventListener('resize', this.onWindowResize);
-
-		console.log(`Welcome to your Flux tour. Watch the data flow...`);
-		console.log(`[1] App requests initial data in App.componentDidMount().`);
-		ExampleActions.getInitialData(this.state);
-
-	}
-
-	componentWillUnmount () {
-
-		// 
-
-	}
-
-	componentDidUpdate () {
-
-		//
-
-	}
-
-	onWindowResize (event) {
-
-		this.computeComponentDimensions();
-
-	}
-
-	onMapMove (event) {
-
-		// TODO: emit event that is picked up by hash manager component
-		// this.updateURL({loc: hashUtils.formatCenterAndZoom(evt.target)}, true);
-		console.log(">>>>> map moved");
-
-	}
-
-	toggleAbout () {
-
-		this.setState({
-			aboutModalOpen: !this.state.aboutModalOpen
-		});
-
-	}
+	// ============================================================ //
+	// React Lifecycle
+	// ============================================================ //
 
 	getDefaultState () {
 
@@ -195,10 +75,95 @@ export default class App extends React.Component {
 					width: 0,
 					height: 0
 				}
-			}
+			},
+			selectedItem: 0
 		};
 
 	}
+
+	componentWillMount () {
+
+		this.computeComponentDimensions();
+
+	}
+
+	componentDidMount () {
+
+		window.addEventListener('resize', this.onWindowResize);
+
+		ExampleStore.addListener(AppActionTypes.storeChanged, this.storeChanged);
+
+		console.log(`Welcome to your Flux tour. Watch the data flow...`);
+		console.log(`[1] App requests initial data in App.componentDidMount().`);
+		ExampleActions.getInitialData(this.state);
+
+	}
+
+	componentWillUnmount () {
+
+		ExampleStore.removeListener(AppActionTypes.storeChanged, this.storeChanged);
+
+	}
+
+	componentDidUpdate () {
+
+		//
+
+	}
+
+
+
+	// ============================================================ //
+	// Handlers
+	// ============================================================ //
+
+	storeChanged () {
+
+		console.log(`[4] The data requested on app init land in the root view (App.jsx.storeChanged), from where they will flow down the component tree. A setState() call updates the data and triggers a render().`);
+
+		let data = ExampleStore.getData();
+
+		// setState with the updated data, which causes a re-render()
+		this.setState({
+			exampleComponent: {
+				title: data.exampleTitle,
+				loading: false
+			},
+			legend: data.legend,
+			punchcard: data.punchcard
+		});
+
+	}
+
+	setSelectedItem (item) {
+
+		console.log('>>>>> TODO: flux marker @ setSelectedItem');
+
+		this.setState({
+			selectedItem: item
+		});
+
+	}
+
+	onWindowResize (event) {
+
+		this.computeComponentDimensions();
+
+	}
+
+	toggleAbout () {
+
+		this.setState({
+			aboutModalOpen: !this.state.aboutModalOpen
+		});
+
+	}
+
+
+
+	// ============================================================ //
+	// Helpers
+	// ============================================================ //
 
 	computeComponentDimensions () {
 
@@ -240,6 +205,43 @@ export default class App extends React.Component {
 
 	}
 
+
+
+	// ============================================================ //
+	// Render functions
+	// ============================================================ //
+
+	renderTileLayers () {
+
+		let layers = [];
+
+		if (cartodbLayers.layergroup && cartodbLayers.layergroup.layers) {
+			layers = layers.concat(cartodbLayers.layergroup.layers.map((item, i) => {
+				return (
+					<CartoDBTileLayer
+						key={ 'cartodb-tile-layer-' + i }
+						userId={ cartodbConfig.userId }
+						sql={ item.options.sql }
+						cartocss={ item.options.cartocss }
+					/>
+				);
+			}));
+		}
+
+		if (tileLayers.layers) {
+			layers = layers.concat(tileLayers.layers.map((item, i) => {
+				return (
+					<TileLayer
+						key={ 'tile-layer-' + i }
+						url={ item.url }
+					/>
+				);
+			}));
+		}
+
+		return layers;
+	}
+
 	render () {
 
 		// TODO: these values need to go elsewhere, probably in a componentized hash parser/manager
@@ -279,16 +281,16 @@ export default class App extends React.Component {
 						</div>
 						<div className='row bottom-row template-tile'>
 							<h2>Application component:</h2>
-							<ExampleComponent title={this.props.exampleTitle}/>
+							<ExampleComponent { ...this.state.exampleComponent } />
 						</div>
 					</div>
 					<div className='columns four right-column full-height'>
 						<div className='row top-row template-tile' style={ { height: this.state.dimensions.upperRight.height + "px" } }>
-							<Punchcard header={ this.props.punchcard.header } categories={ this.props.punchcard.categories } items={ this.props.punchcard.items }/>
+							{ this.state.punchcard ? <Punchcard { ...this.state.punchcard[this.state.selectedItem] } /> : '' }
 						</div>
 						<div className='row bottom-row template-tile'>
 							<h2>Imported component:</h2>
-							<Legend data={this.props.legendData}/>
+							{ this.state.legend ? <Legend data={ this.state.legend }/> : '' }
 						</div>
 					</div>
 				</div>
@@ -316,35 +318,24 @@ export default class App extends React.Component {
 
 	}
 
-	renderTileLayers () {
+}
 
-		let layers = [];
 
-		if (cartodbLayers.layergroup && cartodbLayers.layergroup.layers) {
-			layers = layers.concat(cartodbLayers.layergroup.layers.map((item, i) => {
-				return (
-					<CartoDBTileLayer
-						key={ 'cartodb-tile-layer-' + i }
-						userId={ cartodbConfig.userId }
-						sql={ item.options.sql }
-						cartocss={ item.options.cartocss }
-					/>
-				);
-			}));
-		}
+// Register callback to handle all updates
+AppDispatcher.register((action) => {
 
-		if (tileLayers.layers) {
-			layers = layers.concat(tileLayers.layers.map((item, i) => {
-				return (
-					<TileLayer
-						key={ 'tile-layer-' + i }
-						url={ item.url }
-					/>
-				);
-			}));
-		}
+	switch (action.type) {
 
-		return layers;
+		case AppActionTypes.itemSelected:
+			console.log('>>>>> TODO: flux marker @ App.itemSelected');
+			App.setSelectedItem(action.value);
+			break;
+
 	}
 
-}
+	return true;
+
+});
+
+
+export default App;
