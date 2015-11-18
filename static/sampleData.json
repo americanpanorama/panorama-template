@@ -5,12 +5,12 @@
 			"Schuylkill Navigation",
 			"Chesapeake & Ohio"
 		],
-		initialSelection: "narratives"
+		"initialSelection": "Erie Canal"
 	},
 
-	exampleTitle: "Example Component",
+	"exampleTitle": "Example Component",
 
-	punchcard: [
+	"punchcard": [
 		{
 			"header": {
 				"title": "Erie Canal",

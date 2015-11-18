@@ -280,7 +280,7 @@ class App extends React.Component {
 							</Map>
 						</div>
 						<div className='row bottom-row template-tile'>
-							<h2>Application component:</h2>
+							<h2>Local component:</h2>
 							<ExampleComponent { ...this.state.exampleComponent } />
 						</div>
 					</div>
@@ -290,7 +290,7 @@ class App extends React.Component {
 						</div>
 						<div className='row bottom-row template-tile'>
 							<h2>Imported component:</h2>
-							{ this.state.legend ? <Legend data={ this.state.legend }/> : '' }
+							{ this.state.legend ? <Legend { ...this.state.legend }/> : '' }
 						</div>
 					</div>
 				</div>
