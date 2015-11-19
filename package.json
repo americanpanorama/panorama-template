@@ -24,7 +24,7 @@
   "author": "stamen",
   "license": "ISC",
   "dependencies": {
-    "@panorama/toolkit": "^0.0.13",
+    "flux": "^2.1.1",
     "leaflet": "^0.7.5",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
