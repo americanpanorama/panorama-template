@@ -74,7 +74,7 @@ const ExampleStore = {
 
 		this.data = data;
 
-		console.log(`[3b] ExampleStore updates its cache with the loaded and parsed data, and emits a '${ AppActionTypes.storeChanged }' event from ExampleStore.setData().`);
+		console.log(`[3c] ExampleStore updates its cache with the loaded and parsed data, and emits a '${ AppActionTypes.storeChanged }' event from ExampleStore.setData().`);
 		this.emit(AppActionTypes.storeChanged);
 
 	},
