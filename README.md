@@ -12,12 +12,16 @@ Boilerplate and starting point for creating new applications using the [Panorama
 
 ##Setup
 
+#### 0. Install git
+
+If you're on a Mac, you have this already. If you're on windows, get git from [git-scm](https://git-scm.com/download/win) and install with the defaults.
+
 #### 1. Install dependencies
 
 Ensure that your Node version matches that present in `.nvmrc`.
-[`nvm`](https://github.com/creationix/nvm) is the easiest way to do this,
-especially when using projects that require multiple versions of Node (see the
-`nvm` repo for installation instructions):
+[`nvm`](https://github.com/creationix/nvm) is the easiest way to do this on Mac, [`nvm-windows`](https://github.com/coreybutler/nvm-windows/releases) on Windows. Installation instructions are in each of those links.
+
+To use `nvm` to switch Node versions:
 
 ```bash
 $ nvm install
