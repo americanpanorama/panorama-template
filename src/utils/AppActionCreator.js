@@ -17,7 +17,7 @@ export const ExampleActions = {
 	 * Load data needed by the application on init.
 	 */
 	getInitialData: (state) => {
-		console.log(`[2] A '${ AppActionTypes.getInitialData }' event is broadcast globally from AppActionCreator.getInitialData().`);
+		console.log(`[2] A '${ AppActionTypes.getInitialData }' action is broadcast globally from AppActionCreator.getInitialData().`);
 		AppDispatcher.dispatch({
 			type: AppActionTypes.getInitialData,
 			state: state
