@@ -101,7 +101,7 @@ AppDispatcher.register((action) => {
 	switch (action.type) {
 
 		case AppActionTypes.getInitialData:
-			console.log(`[3a] The '${ AppActionTypes.getInitialData }' event is handled by ExampleStore....`);
+			console.log(`[3a] The '${ AppActionTypes.getInitialData }' action is handled by ExampleStore....`);
 			ExampleStore.getInitialData(action.state);
 			break;
 
