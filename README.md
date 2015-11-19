@@ -20,10 +20,13 @@ especially when using projects that require multiple versions of Node (see the
 `nvm` repo for installation instructions):
 
 ```bash
-$ nvm use
-Found '/Users/seth/src/americanpanorama/panorama/.nvmrc' with version <0.12.7>
+$ nvm install
+Found '/Users/seth/src/americanpanorama/panorama-template/.nvmrc' with version <0.12.7>
+######################################################################## 100.0%
 Now using node v0.12.7 (npm v2.11.3)
 ```
+
+NOTE: you'll need to run `nvm install` (or `nvm use`) in each shell instance.
 
 Make sure you have [npm](https://www.npmjs.com/) installed. Note: **version > 2.7.0 is required** to install scoped packages, such as `@panorama/toolkit`. Instructions for updating npm are [here](https://docs.npmjs.com/getting-started/installing-node#updating-npm).
 
