@@ -16,7 +16,7 @@ Boilerplate and starting point for creating new applications using the [Panorama
 
 If you're on a Mac, you have this already. If you're on windows, get git from [git-scm](https://git-scm.com/download/win) and install with the defaults.
 
-#### 1. Install dependencies
+#### 1. Set up required Node version 
 
 Ensure that your Node version matches that present in `.nvmrc`.
 [`nvm`](https://github.com/creationix/nvm) is the easiest way to do this on Mac, [`nvm-windows`](https://github.com/coreybutler/nvm-windows/releases) on Windows. Installation instructions are in each of those links.
@@ -32,6 +32,8 @@ Now using node v0.12.7 (npm v2.11.3)
 
 NOTE: you'll need to run `nvm install` (or `nvm use`) in each shell instance.
 
+#### 2. Install dependencies
+
 Make sure you have [npm](https://www.npmjs.com/) installed. Note: **version > 2.7.0 is required** to install scoped packages, such as `@panorama/toolkit`. Instructions for updating npm are [here](https://docs.npmjs.com/getting-started/installing-node#updating-npm).
 
 Load required **npm** modules.
@@ -40,7 +42,7 @@ Load required **npm** modules.
 npm install
 ```
 
-#### 2. Set up basemaps
+#### 3. Set up basemaps
 
 If you're using CartoDB, either for data requests or basemaps:
 Create a `config.json` file from `config.json.sample` in `./basemaps/cartodb` and add your CartoDB account name to the file. Will look like this...
