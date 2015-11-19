@@ -14,6 +14,17 @@ Boilerplate and starting point for creating new applications using the [Panorama
 
 #### 1. Install dependencies
 
+Ensure that your Node version matches that present in `.nvmrc`.
+[`nvm`](https://github.com/creationix/nvm) is the easiest way to do this,
+especially when using projects that require multiple versions of Node (see the
+`nvm` repo for installation instructions):
+
+```bash
+$ nvm use
+Found '/Users/seth/src/americanpanorama/panorama/.nvmrc' with version <0.12.7>
+Now using node v0.12.7 (npm v2.11.3)
+```
+
 Make sure you have [npm](https://www.npmjs.com/) installed. Note: **version > 2.7.0 is required** to install scoped packages, such as `@panorama/toolkit`. Instructions for updating npm are [here](https://docs.npmjs.com/getting-started/installing-node#updating-npm).
 
 Load required **npm** modules.
