@@ -5,7 +5,7 @@
 			"Schuylkill Navigation",
 			"Chesapeake & Ohio"
 		],
-		"initialSelection": "Erie Canal"
+		"selectedItem": "Erie Canal"
 	},
 
 	"exampleTitle": "Example Component",

@@ -6,10 +6,6 @@ import { Map, TileLayer, GeoJson } from 'react-leaflet';
 // import example module from @panorama
 import { Legend, Punchcard } from '@panorama/toolkit';
 
-// load from local copy of @panorama/toolkit repo.
-// for development of panorama-template and @panorama/toolkit only.
-// import { Legend, Punchcard } from '../../panorama/';
-
 /*
  * Data flow via Flux:
  * https://facebook.github.io/flux/docs/overview.html
@@ -29,6 +25,8 @@ import ExampleComponent from './components/ExampleComponent.jsx';
 import CartoDBTileLayer from './components/CartoDBTileLayer.jsx';
 
 // utils
+// TODO: refactor to use same structure as PanoramaDispatcher;
+// Having `flux` as a dependency, and two different files, is overkill.
 import AppDispatcher from './utils/AppDispatcher';
 import { AppActionTypes, ExampleActions } from './utils/AppActionCreator';
 
@@ -54,6 +52,7 @@ class App extends React.Component {
 		this.storeChanged = this.storeChanged.bind(this);
 		this.onWindowResize = this.onWindowResize.bind(this);
 		this.toggleAbout = this.toggleAbout.bind(this);
+		this.onLegendItemSelected = this.onLegendItemSelected.bind(this);
 
 	}
 
@@ -91,10 +90,11 @@ class App extends React.Component {
 
 		window.addEventListener('resize', this.onWindowResize);
 
-		ExampleStore.addListener(AppActionTypes.storeChanged, this.storeChanged);
-
 		console.log(`Welcome to your Flux tour. Watch the data flow...`);
-		console.log(`[1] App requests initial data in App.componentDidMount().`);
+		console.log(`[1a] App listens for change events dispatched from ExampleStore.`);
+		ExampleStore.addListener(AppActionTypes.storeChanged, this.storeChanged);
+		
+		console.log(`[1b] App requests initial data in App.componentDidMount().`);
 		ExampleActions.getInitialData(this.state);
 
 	}
@@ -119,7 +119,7 @@ class App extends React.Component {
 
 	storeChanged () {
 
-		console.log(`[4] The data requested on app init land in the root view (App.jsx.storeChanged), from where they will flow down the component tree. A setState() call updates the data and triggers a render().`);
+		console.log(`[4] The data requested on app init land in the root view (App.storeChanged), from where they will flow down the component tree. A setState() call updates the data and triggers a render().`);
 
 		let data = ExampleStore.getData();
 
@@ -135,12 +135,14 @@ class App extends React.Component {
 
 	}
 
-	setSelectedItem (item) {
-
-		console.log('>>>>> TODO: flux marker @ setSelectedItem');
+	onLegendItemSelected (value, index) {
 
 		this.setState({
-			selectedItem: item
+			selectedItem: index,
+			legend: {
+				...this.state.legend,	// merge existing state into new state
+				selectedItem: value
+			},
 		});
 
 	}
@@ -290,7 +292,7 @@ class App extends React.Component {
 						</div>
 						<div className='row bottom-row template-tile'>
 							<h2>Imported component:</h2>
-							{ this.state.legend ? <Legend { ...this.state.legend }/> : '' }
+							{ this.state.legend ? <Legend { ...this.state.legend } onItemSelected={ this.onLegendItemSelected }/> : '' }
 						</div>
 					</div>
 				</div>
@@ -319,23 +321,5 @@ class App extends React.Component {
 	}
 
 }
-
-
-// Register callback to handle all updates
-AppDispatcher.register((action) => {
-
-	switch (action.type) {
-
-		case AppActionTypes.itemSelected:
-			console.log('>>>>> TODO: flux marker @ App.itemSelected');
-			App.setSelectedItem(action.value);
-			break;
-
-	}
-
-	return true;
-
-});
-
 
 export default App;
