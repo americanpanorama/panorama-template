@@ -10,9 +10,9 @@ import { Legend, Punchcard } from '@panorama/toolkit';
  * Data flow via Flux:
  * https://facebook.github.io/flux/docs/overview.html
  * 
- *                  ┌-----   actions  <-----┐
- *                  v                       |
- * actions --> dispatcher --> stores --> views
+ *                  ┌-----   actions   <-----┐
+ *                  v                        |
+ * actions --> dispatcher --> stores --> root view
  */
 
 // stores
