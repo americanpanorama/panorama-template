@@ -903,6 +903,43 @@ header {
   width: 100%;
   height: 100%; }
 
+.intro-button {
+  display: block;
+  position: absolute;
+  width: auto;
+  height: auto;
+  border: none;
+  background: none;
+  padding: 0; }
+  header .intro-button {
+    bottom: 0.5em;
+    right: 0.1em; }
+  .left-column .bottom-row .intro-button {
+    left: 0.8333em;
+    bottom: 0.8333em; }
+  .right-column .top-row .intro-button {
+    top: 0.8333em;
+    right: 0.8333em; }
+    .right-column .top-row .intro-button.has-scrollbar {
+      right: 1.5em; }
+  .right-column .bottom-row .intro-button {
+    bottom: 0.8333em;
+    right: 0.8333em; }
+
+.icon.info {
+  display: block;
+  width: 0.8em;
+  height: 0.8em;
+  border: 1px solid #454545;
+  border-radius: 50%; }
+  .icon.info::before {
+    content: 'i';
+    position: absolute;
+    top: 0.25em;
+    left: 0.525em;
+    font-size: 0.6em;
+    font-family: serif; }
+
 .ReactModalPortal .ReactModal__Overlay {
   z-index: 2000;
   background-color: rgba(51, 51, 51, 0.25); }

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "gulp",
+    "dist": "gulp dist",
     "test": "gulp test",
     "lint": "eslint ./src",
     "build:basemaps": "node_modules/.bin/cartodb-yaml ./basemaps/cartodb/basemaps.yml > ./basemaps/cartodb/basemaps.json"
@@ -24,7 +25,7 @@
   "author": "stamen",
   "license": "ISC",
   "dependencies": {
-    "@panorama/toolkit": "^0.0.17",
+    "@panorama/toolkit": "americanpanorama/panorama",
     "flux": "^2.1.1",
     "leaflet": "^0.7.5",
     "react": "^0.14.0",

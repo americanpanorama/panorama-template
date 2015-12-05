@@ -1,14 +1,14 @@
 var gulp             = require('gulp'),
-    source           = require('vinyl-source-stream'),
-    buffer           = require('vinyl-buffer'),
-    browserify       = require('browserify'),
-    watchify         = require('watchify'),
-    babelify         = require('babelify'),
-    parcelify        = require('parcelify'),
-    glob             = require('glob'),
-    rimraf           = require("rimraf"),
-    gulpLoadPlugins  = require('gulp-load-plugins'),
-    exec             = require('child_process').exec;
+	source           = require('vinyl-source-stream'),
+	buffer           = require('vinyl-buffer'),
+	browserify       = require('browserify'),
+	watchify         = require('watchify'),
+	babelify         = require('babelify'),
+	parcelify        = require('parcelify'),
+	glob             = require('glob'),
+	rimraf           = require("rimraf"),
+	gulpLoadPlugins  = require('gulp-load-plugins'),
+	exec             = require('child_process').exec;
  
 // Automatically load any gulp plugins in your package.json
 var $ = gulpLoadPlugins();
@@ -16,8 +16,15 @@ var $ = gulpLoadPlugins();
 // External dependencies you do not want to rebundle while developing,
 // but include in your application deployment
 var dependencies = [
+	'@panorama/toolkit',
+	'd3',
+	'flux',
+	'leaflet',
+	'lodash',
+	'queue-async',
 	'react',
-	'react-dom'
+	'react-dom',
+	'react-leaflet'
 ];
 
 var WEB_SERVER_PORT = 8888;
@@ -49,11 +56,10 @@ function browserifyTask (options) {
 	// The bundling process
 	function createBundle() {
 
-		lintTask(options);
-
 		var start = Date.now();
 		console.log('Building APP bundle');
 		if (options.development) {
+			lintTask(options);
 			appBundler.bundle()
 				.on('error', $.util.log)
 				.pipe(source('main.js'))
@@ -68,7 +74,7 @@ function browserifyTask (options) {
 				.on('error', $.util.log)
 				.pipe(source('main.js'))
 				.pipe(buffer())
-				// .pipe($.uglify())	// this is failing with a JS_Parse_Error, can't figure out why
+				.pipe($.uglify())
 				.pipe(gulp.dest(options.dest))
 				.pipe($.notify({
 					'onLast': true,
@@ -237,8 +243,6 @@ gulp.task('default', function () {
 
 });
 
-// NOTE: not yet fully set up, due to an uglify failure.
-// see browserifyTask for more info.
 gulp.task('dist', function () {
 
 	rimraf("./dist/**", function() {
@@ -250,7 +254,7 @@ gulp.task('dist', function () {
 
 		copyTask({
 			"src"               : "./node_modules/@panorama/toolkit/dist/*.css*",
-			"dest"              : "./build",
+			"dest"              : "./dist",
 			"pathDepth"         : 4
 		});
 
@@ -258,7 +262,7 @@ gulp.task('dist', function () {
 
 		browserifyTask({
 			"development" : false,
-			"src"				: './src/main.js',
+			"src"				: './src/main.jsx',
 			"dest"				: './dist'
 		});
 
