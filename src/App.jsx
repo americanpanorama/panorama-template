@@ -3,8 +3,12 @@ import * as React from 'react';
 import Modal from 'react-modal';
 import { Map, TileLayer, GeoJson } from 'react-leaflet';
 
-// import example module from @panorama
-import { Legend, Punchcard } from '@panorama/toolkit';
+// import components from @panorama/toolkit
+import {
+	IntroManager,
+	Legend,
+	Punchcard
+} from '@panorama/toolkit';
 
 /*
  * Data flow via Flux:
@@ -50,9 +54,11 @@ class App extends React.Component {
 		// bind handlers to this component instance,
 		// since React no longer does this automatically when using ES6
 		this.storeChanged = this.storeChanged.bind(this);
+		this.onLegendItemSelected = this.onLegendItemSelected.bind(this);
 		this.onWindowResize = this.onWindowResize.bind(this);
 		this.toggleAbout = this.toggleAbout.bind(this);
-		this.onLegendItemSelected = this.onLegendItemSelected.bind(this);
+		this.triggerIntro = this.triggerIntro.bind(this);
+		this.onIntroExit = this.onIntroExit.bind(this);
 
 	}
 
@@ -157,6 +163,63 @@ class App extends React.Component {
 
 		this.setState({
 			aboutModalOpen: !this.state.aboutModalOpen
+		});
+
+	}
+
+	triggerIntro (event) {
+
+		if (this.state.aboutModalOpen) {
+			this.toggleAbout();
+		}
+
+		this.setState({
+			intro: {
+				open: true,
+				step: (event && event.currentTarget) ? parseInt(event.currentTarget.dataset.step) : null,
+				config: {
+					showStepNumbers: false,
+					skipLabel: '×',
+					nextLabel: '⟩',
+					prevLabel: '⟨',
+					doneLabel: '×'
+				},
+
+				steps: [
+					{
+						element: '.left-column .top-row.template-tile',
+						intro: 'copy for step ONE goes here',
+						position: 'right'
+					},
+					{
+						element: '.left-column .bottom-row.template-tile',
+						intro: 'copy for step TWO goes here',
+						position: 'top'
+					},
+					{
+						element: '.right-column .top-row.template-tile',
+						intro: 'copy for step THREE goes here',
+						position: 'left'
+					},
+					{
+						element: '.right-column .bottom-row.template-tile',
+						intro: 'copy for step FOUR goes here',
+						position: 'top'
+					}
+				],
+			},
+
+			onExit: this.onIntroExit
+		});
+
+	}
+
+	onIntroExit () {
+
+		this.setState({
+			intro: {
+				open: false
+			}
 		});
 
 	}
@@ -275,6 +338,7 @@ class App extends React.Component {
 						<header className='row u-full-width'>
 							<h1><span className='header-main'>PANORAMA TEMPLATE</span></h1>
 							<h4 onClick={ this.toggleAbout }>ABOUT THIS MAP</h4>
+							<button className="intro-button" data-step="0" onClick={ this.triggerIntro }><span className='icon info'/></button>
 						</header>
 						<div className='row top-row template-tile' style={ { height: this.state.dimensions.upperLeft.height + "px" } }>
 							<Map center={ loc } zoom={ zoom }>
@@ -284,15 +348,18 @@ class App extends React.Component {
 						<div className='row bottom-row template-tile'>
 							<h2>Local component:</h2>
 							<ExampleComponent { ...this.state.exampleComponent } />
+							<button className="intro-button" data-step="1" onClick={ this.triggerIntro }><span className='icon info'/></button>
 						</div>
 					</div>
 					<div className='columns four right-column full-height'>
 						<div className='row top-row template-tile' style={ { height: this.state.dimensions.upperRight.height + "px" } }>
 							{ this.state.punchcard ? <Punchcard { ...this.state.punchcard[this.state.selectedItem] } /> : '' }
+							<button className="intro-button" data-step="2" onClick={ this.triggerIntro }><span className='icon info'/></button>
 						</div>
 						<div className='row bottom-row template-tile'>
 							<h2>Imported component:</h2>
 							{ this.state.legend ? <Legend { ...this.state.legend } onItemSelected={ this.onLegendItemSelected }/> : '' }
+							<button className="intro-button" data-step="3" onClick={ this.triggerIntro }><span className='icon info'/></button>
 						</div>
 					</div>
 				</div>
@@ -314,6 +381,8 @@ class App extends React.Component {
 					<p>This map is authored by the staff of the Digital Scholarship Lab: Robert K. Nelson, Scott Nesbit, Edward L. Ayers, Justin Madron, and Nathaniel Ayers. Kim D'agostini and Erica Havens geolocated country locations.</p>
 					<p>The developers, designers, and staff at Stamen Design have been exceptional partners on this project. Our thanks to Kai Chang, Jon Christensen, Seth Fitzsimmons, Eric Gelinas, Sean Connelley, Nicolette Hayes, Alan McConchie, Michael Neuman, Dan Rademacher, and Eric Rodenbeck.</p>
 				</Modal>
+
+				<IntroManager { ...this.state.intro } />
 
 			</div>
 		);

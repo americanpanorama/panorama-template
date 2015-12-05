@@ -155,6 +155,51 @@ header {
 	height: 100%;
 }
 
+.intro-button {
+	display: block;
+	position: absolute;
+	width: auto;
+	height: auto;
+	border: none;
+	background: none;
+	padding: 0;
+
+	header & {
+		bottom: 0.5em;
+		right: 0.1em;
+	}
+	.left-column .bottom-row & {
+		left: 0.8333em;
+		bottom: 0.8333em;
+	}
+	.right-column .top-row & {
+		top: 0.8333em;
+		right: 0.8333em;
+		&.has-scrollbar {
+			right: 1.5em;
+		}
+	}
+	.right-column .bottom-row & {
+		bottom: 0.8333em;
+		right: 0.8333em;
+	}
+}
+.icon.info {
+	display: block;
+	width: 0.8em;
+	height: 0.8em;
+	border: 1px solid $text-color;
+	border-radius: 50%;
+	&::before {
+		content: 'i';
+		position: absolute;
+		top: 0.25em;
+		left: 0.525em;
+		font-size: 0.6em;
+		font-family: serif;
+	}
+}
+
 .ReactModalPortal {
 
 	.ReactModal__Overlay {
