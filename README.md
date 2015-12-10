@@ -3,7 +3,7 @@ Boilerplate and starting point for creating new applications using the [Panorama
 
 
 ##Data Sets
-####TODO: Guide on setting up tables and formatting data
+A guide to setting up CartoDB data tables can be found in [data/README.md](data/README.md)
 
 ##Dependencies
 * [npm](https://www.npmjs.com/)
@@ -49,14 +49,11 @@ Create a `config.json` file from `config.json.sample` in `./basemaps/cartodb` an
 
 ```json
 {
-	"userId": "[CartoDB user id / account name]",
-	"apiKey": "[CartoDB API key]"
+	"userId": "[CartoDB user id / account name]"
 }
 ```
 
-####TODO: Either use materialized tables or an authenticated session, and remove `apiKey`
-**Note:** using `apiKey` will append the specified API key as a query param on all requests to CartoDB. This is insecure and is not intended for production! We need to decide on a technique that either uses materialized tables or an authenticated session before going live.
-
+Note: if you are using public materialized tables (see [data/README.md](data/README.md)) then you don't need an authenticated session, and you can remove . However, for development you might want to use authentication, so you can also include an `apiKey` parameter in your `config.json`. `apiKey` will append the specified API key as a query param on all requests to CartoDB. This is insecure and is not intended for production!
 
 Specify queries needed for basemap layers in `./basemaps`:
 
