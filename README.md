@@ -53,7 +53,7 @@ Create a `config.json` file from `config.json.sample` in `./basemaps/cartodb` an
 }
 ```
 
-Note: if you are using public materialized tables (see [data/README.md](data/README.md)) then you don't need an authenticated session, and you can remove . However, for development you might want to use authentication, so you can also include an `apiKey` parameter in your `config.json`. `apiKey` will append the specified API key as a query param on all requests to CartoDB. This is insecure and is not intended for production!
+Note: if you are using public materialized tables (see [data/README.md](data/README.md)) then you don't need an authenticated session. However, for development you might want to use authentication; if so, you can also include an `apiKey` parameter in your `config.json`. `apiKey` will append the specified API key as a query param on all requests to CartoDB. **This is insecure and is not intended for production!**
 
 Specify queries needed for basemap layers in `./basemaps`:
 
