@@ -2,26 +2,33 @@ import AppDispatcher from './AppDispatcher';
 
 export const AppActionTypes = {
 
-	// Note: stores emit this type of event.
-	// Though it is not actually an Action type;
-	// it's enumerated here for ease of access.
-	storeChanged: 'storeChanged',
-
-	getInitialData: 'getInitialData'
+  itemSelected: 'itemSelected',
+  mapMoved: 'mapMoved'
 
 };
 
-export const ExampleActions = {
+export const AppActions = {
 
-	/**
-	 * Load data needed by the application on init.
-	 */
-	getInitialData: (state) => {
-		console.log(`[2] A '${ AppActionTypes.getInitialData }' action is broadcast globally from AppActionCreator.getInitialData().`);
-		AppDispatcher.dispatch({
-			type: AppActionTypes.getInitialData,
-			state: state
-		});
-	}
+  /**
+   * Dispatch action when an item is selected (usually by user action).
+   * @param {String} item     ID of the selected item.
+   */
+  itemSelected: (item) => {
+    AppDispatcher.dispatch({
+      type: AppActionTypes.itemSelected,
+      value: item
+    });
+  },
 
-}
+  /**
+   * Dispatch action when map is zoomed or panned.
+   * @param {Object} mapState   { zoom, center: { lat, lng } }
+   */
+  mapMoved: (mapState) => {
+    AppDispatcher.dispatch({
+      type: AppActionTypes.mapMoved,
+      value: mapState
+    });
+  }
+
+};

@@ -9,58 +9,58 @@ import { AppActionTypes } from '../utils/AppActionCreator';
  */
 export default class ExampleComponent extends React.Component {
 
-	// property validation
-	static propTypes = {
-		title: React.PropTypes.string,
-		loading: React.PropTypes.bool
-	};
+  // property validation
+  static propTypes = {
+    title: React.PropTypes.string,
+    loading: React.PropTypes.bool
+  };
 
-	// property defaults (ES7-style React)
-	// (instead of ES5-style getDefaultProps)
-	static defaultProps = {
-		title: 'Default Title',
-		loading: true
-	};
+  // property defaults (ES7-style React)
+  // (instead of ES5-style getDefaultProps)
+  static defaultProps = {
+    title: 'Default Title',
+    loading: true
+  };
 
-	constructor (props) {
+  constructor (props) {
 
-		super(props);
+    super(props);
 
-	}
+  }
 
-	componentWillMount () {
+  componentWillMount () {
 
-		//
+    //
 
-	}
+  }
 
-	componentDidMount () {
+  componentDidMount () {
 
-		//
+    //
 
-	}
+  }
 
-	componentWillUnmount () {
+  componentWillUnmount () {
 
-		//
+    //
 
-	}
+  }
 
-	componentDidUpdate () {
+  componentDidUpdate () {
 
-		//
+    //
 
-	}
+  }
 
-	render () {
+  render () {
 
-		return (
-			<div className='example-component'>
-				<h3>{ this.props.title }</h3>
-				<p>Initial data load { this.props.loading ? 'pending...' : 'complete!' }</p>
-			</div>
-		);
+    return (
+      <div className='example-component'>
+        <h3>{ this.props.title }</h3>
+        <p>Initial data load { this.props.loading ? 'pending...' : 'complete!' }</p>
+      </div>
+    );
 
-	}
+  }
 
 }

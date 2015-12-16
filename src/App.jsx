@@ -5,9 +5,11 @@ import { Map, TileLayer, GeoJson } from 'react-leaflet';
 
 // import components from @panorama/toolkit
 import {
-	IntroManager,
-	Legend,
-	Punchcard
+  CartoDBTileLayer,
+  HashManager,
+  IntroManager,
+  Legend,
+  Punchcard
 } from '@panorama/toolkit';
 
 /*
@@ -25,14 +27,11 @@ import ExampleStore from './stores/ExampleStore';
 // local (not installed via npm) components (views)
 import ExampleComponent from './components/ExampleComponent.jsx';
 
-// TODO: move this to another repo, probably @panorama/toolkit
-import CartoDBTileLayer from './components/CartoDBTileLayer.jsx';
-
 // utils
 // TODO: refactor to use same structure as PanoramaDispatcher;
 // Having `flux` as a dependency, and two different files, is overkill.
+import { AppActions, AppActionTypes } from './utils/AppActionCreator';
 import AppDispatcher from './utils/AppDispatcher';
-import { AppActionTypes, ExampleActions } from './utils/AppActionCreator';
 
 // config
 import tileLayers from '../basemaps/tileLayers.json';
@@ -43,351 +42,461 @@ import cartodbLayers from '../basemaps/cartodb/basemaps.json';
 // main app container
 class App extends React.Component {
 
-	constructor (props) {
+  constructor (props) {
 
-		super(props);
+    super(props);
 
-		// set up initial state in constructor
-		// (instead of ES5-style getInitialState)
-		this.state = this.getDefaultState();
+    console.log('Welcome to your Panorama data flow tour!');
+    console.log('Panorama applications use a variant of the `Flux` pattern, and store application state in the URL hash.');
+    console.log('Here\'s an overview:');
+    console.log('The root of the application (`App`) listens for changes in application state, stores them in the hash.');
+    console.log('When the hash changes, App responds by passing the new state down through all its child components.');
+    console.log('In this pattern, the hash is the single source of truth for application state, and all components are stateless; they do as they are told by the root of the application, which in turn is directed by the hash.');
+    console.log('* * * * * * * * * *');
 
-		// bind handlers to this component instance,
-		// since React no longer does this automatically when using ES6
-		this.storeChanged = this.storeChanged.bind(this);
-		this.onLegendItemSelected = this.onLegendItemSelected.bind(this);
-		this.onWindowResize = this.onWindowResize.bind(this);
-		this.toggleAbout = this.toggleAbout.bind(this);
-		this.triggerIntro = this.triggerIntro.bind(this);
-		this.onIntroExit = this.onIntroExit.bind(this);
+    this.handleAppStateChanges();
 
-	}
+    // set up initial state in constructor
+    // (instead of ES5-style getInitialState)
+    this.state = this.getDefaultState();
 
+    // bind handlers to this component instance,
+    // since React no longer does this automatically when using ES6
+    this.onWindowResize = this.onWindowResize.bind(this);
+    this.hashChanged = this.hashChanged.bind(this);
+    this.onMapMoved = this.onMapMoved.bind(this);
+    this.onLegendItemSelected = this.onLegendItemSelected.bind(this);
+    this.toggleAbout = this.toggleAbout.bind(this);
+    this.triggerIntro = this.triggerIntro.bind(this);
+    this.onIntroExit = this.onIntroExit.bind(this);
 
+  }
 
-	// ============================================================ //
-	// React Lifecycle
-	// ============================================================ //
+  handleAppStateChanges () {
 
-	getDefaultState () {
+    console.log('[1] App registers with AppDispatcher to be notified of changes in application state, most frequently caused by user actions.');
 
-		return {
-			dimensions: {
-				upperLeft: {
-					width: 0,
-					height: 0
-				},
-				upperRight: {
-					width: 0,
-					height: 0
-				}
-			},
-			selectedItem: 0
-		};
+    // Register callback to handle all updates
+    AppDispatcher.register((action) => {
 
-	}
+      let key;
 
-	componentWillMount () {
+      switch (action.type) {
 
-		this.computeComponentDimensions();
+      case AppActionTypes.itemSelected:
+        key = App.STATE_KEYS.ITEM;
+        break;
 
-	}
+      case AppActionTypes.mapMoved:
+        this.mapHashUpdated = true;
+        key = HashManager.MAP_STATE_KEY;
+        break;
 
-	componentDidMount () {
+      }
 
-		window.addEventListener('resize', this.onWindowResize);
+      if (key) {
+        let hash = {};
+        hash[key] = action.value;
+        console.log('[6a] App is notified of a change in application state of type and value { ' + action.type + ': ' + action.value + ' }. It updates the hash with the new state....');
+        HashManager.updateHash(hash);
+      }
 
-		console.log(`Welcome to your Flux tour. Watch the data flow...`);
-		console.log(`[1a] App listens for change events dispatched from ExampleStore.`);
-		ExampleStore.addListener(AppActionTypes.storeChanged, this.storeChanged);
-		
-		console.log(`[1b] App requests initial data in App.componentDidMount().`);
-		ExampleActions.getInitialData(this.state);
+      return true;
 
-	}
+    });
 
-	componentWillUnmount () {
+  }
 
-		ExampleStore.removeListener(AppActionTypes.storeChanged, this.storeChanged);
 
-	}
+  // ============================================================ //
+  // React Lifecycle
+  // ============================================================ //
 
-	componentDidUpdate () {
+  getDefaultState () {
 
-		//
+    return {
+      dimensions: {
+        upperLeft: {
+          width: 0,
+          height: 0
+        },
+        upperRight: {
+          width: 0,
+          height: 0
+        }
+      },
+      selectedItemId: 0,
 
-	}
+      // Override defaults with map state in hash, if present
+      map: Object.assign({}, {
+        zoom: 5,
+        center: [-3.300, 2.800]
+      }, HashManager.getState(HashManager.MAP_STATE_KEY))
+    };
 
+  }
 
+  static STATE_KEYS = {
+    'ITEM': 'item'
+  };
 
-	// ============================================================ //
-	// Handlers
-	// ============================================================ //
+  componentWillMount () {
 
-	storeChanged () {
+    this.computeComponentDimensions();
+    
+    console.log('[2] Immediately before the root component (`App`) mounts, it requests initial data from ExampleStore.');
+    ExampleStore.loadInitialData()
+    .then(() => {
 
-		console.log(`[4] The data requested on app init land in the root view (App.storeChanged), from where they will flow down the component tree. A setState() call updates the data and triggers a render().`);
+      console.log('[5] App responds to the initial data load by manually triggering `hashChanged()` in order to `render()` application with the loaded data.');
+      this.hashChanged();
 
-		let data = ExampleStore.getData();
+    }, (error) => {
 
-		// setState with the updated data, which causes a re-render()
-		this.setState({
-			exampleComponent: {
-				title: data.exampleTitle,
-				loading: false
-			},
-			legend: data.legend,
-			punchcard: data.punchcard
-		});
+      // fail loudly, do not swallow the error
+      throw error;
 
-	}
+    });
 
-	onLegendItemSelected (value, index) {
+    // Prepare object to deliver default application state to HashManager,
+    // with initial values paired with keys to use in the hash.
+    let initialState = {};
+    initialState[App.STATE_KEYS.ITEM] = this.state.selectedItemId;
+    initialState[HashManager.MAP_STATE_KEY] = {
+      zoom: this.state.map.zoom,
+      center: this.state.map.center
+    };
 
-		this.setState({
-			selectedItem: index,
-			legend: {
-				...this.state.legend,	// merge existing state into new state
-				selectedItem: value
-			},
-		});
-
-	}
-
-	onWindowResize (event) {
-
-		this.computeComponentDimensions();
-
-	}
-
-	toggleAbout () {
-
-		this.setState({
-			aboutModalOpen: !this.state.aboutModalOpen
-		});
-
-	}
-
-	triggerIntro (event) {
-
-		if (this.state.aboutModalOpen) {
-			this.toggleAbout();
-		}
-
-		this.setState({
-			intro: {
-				open: true,
-				step: (event && event.currentTarget) ? parseInt(event.currentTarget.dataset.step) : null,
-				config: {
-					showStepNumbers: false,
-					skipLabel: '×',
-					nextLabel: '⟩',
-					prevLabel: '⟨',
-					doneLabel: '×'
-				},
-
-				steps: [
-					{
-						element: '.left-column .top-row.template-tile',
-						intro: 'copy for step ONE goes here',
-						position: 'right'
-					},
-					{
-						element: '.left-column .bottom-row.template-tile',
-						intro: 'copy for step TWO goes here',
-						position: 'top'
-					},
-					{
-						element: '.right-column .top-row.template-tile',
-						intro: 'copy for step THREE goes here',
-						position: 'left'
-					},
-					{
-						element: '.right-column .bottom-row.template-tile',
-						intro: 'copy for step FOUR goes here',
-						position: 'top'
-					}
-				],
-			},
-
-			onExit: this.onIntroExit
-		});
-
-	}
-
-	onIntroExit () {
-
-		this.setState({
-			intro: {
-				open: false
-			}
-		});
-
-	}
-
-
-
-	// ============================================================ //
-	// Helpers
-	// ============================================================ //
-
-	computeComponentDimensions () {
-
-		// based off of sizes stored within _variables.scss --
-		// if you change them there, change them here.
-		let containerPadding = 20,
-			headerHeight = 90,
-			breakpointWidthWide = 1280,
-			bottomRowHeightShort = 230,
-			bottomRowHeightTall = 310,
-			bottomRowHeight,
-			dimensions = {};
-
-		// Calculate bottom row height as set by media breakpoints
-		let bottomRowEl = document.querySelector('.bottom-row'),
-			bottomRowHeightStyle;
-
-		if (bottomRowEl) {
-			bottomRowHeightStyle = window.getComputedStyle(bottomRowEl);
-			bottomRowHeight = bottomRowEl.offsetHeight + parseFloat(bottomRowHeightStyle.marginTop.replace('px', '')) + parseFloat(bottomRowHeightStyle.marginBottom.replace('px', ''));
-		} else {
-			bottomRowHeight = window.innerWidth < breakpointWidthWide ? bottomRowHeightShort : bottomRowHeightTall;
-		}
-
-		dimensions.upperRight = {
-			height: window.innerHeight - bottomRowHeight - 3 * containerPadding
-		};
-		dimensions.upperLeft = {
-			height: dimensions.upperRight.height - headerHeight
-		};
-		dimensions.lowerLeft = {
-			height: bottomRowHeight - 2 * containerPadding
-		};
-		dimensions.lowerRight = {
-			height: dimensions.lowerLeft.height
-		};
-
-		this.setState({ dimensions: dimensions });
-
-	}
-
-
-
-	// ============================================================ //
-	// Render functions
-	// ============================================================ //
-
-	renderTileLayers () {
-
-		let layers = [];
-
-		if (cartodbLayers.layergroup && cartodbLayers.layergroup.layers) {
-			layers = layers.concat(cartodbLayers.layergroup.layers.map((item, i) => {
-				return (
-					<CartoDBTileLayer
-						key={ 'cartodb-tile-layer-' + i }
-						userId={ cartodbConfig.userId }
-						sql={ item.options.sql }
-						cartocss={ item.options.cartocss }
-					/>
-				);
-			}));
-		}
-
-		if (tileLayers.layers) {
-			layers = layers.concat(tileLayers.layers.map((item, i) => {
-				return (
-					<TileLayer
-						key={ 'tile-layer-' + i }
-						url={ item.url }
-					/>
-				);
-			}));
-		}
-
-		return layers;
-	}
-
-	render () {
-
-		// TODO: these values need to go elsewhere, probably in a componentized hash parser/manager
-		let loc = [-5.200, 0.330],
-			zoom = 5,
-
-			modalStyle = {
-				overlay : {
-					backgroundColor: null
-				},
-				content : {
-					top: null,
-					left: null,
-					right: null,
-					bottom: null,
-					border: null,
-					background: null,
-					borderRadius: null,
-					padding: null,
-					position: null
-				}
-			};
-
-		return (
-			<div className='container full-height'>
-
-				<div className='row full-height'>
-					<div className='columns eight left-column full-height'>
-						<header className='row u-full-width'>
-							<h1><span className='header-main'>PANORAMA TEMPLATE</span></h1>
-							<h4 onClick={ this.toggleAbout }>ABOUT THIS MAP</h4>
-							<button className="intro-button" data-step="0" onClick={ this.triggerIntro }><span className='icon info'/></button>
-						</header>
-						<div className='row top-row template-tile' style={ { height: this.state.dimensions.upperLeft.height + "px" } }>
-							<Map center={ loc } zoom={ zoom }>
-								{ this.renderTileLayers() }
-							</Map>
-						</div>
-						<div className='row bottom-row template-tile'>
-							<h2>Local component:</h2>
-							<ExampleComponent { ...this.state.exampleComponent } />
-							<button className="intro-button" data-step="1" onClick={ this.triggerIntro }><span className='icon info'/></button>
-						</div>
-					</div>
-					<div className='columns four right-column full-height'>
-						<div className='row top-row template-tile' style={ { height: this.state.dimensions.upperRight.height + "px" } }>
-							{ this.state.punchcard ? <Punchcard { ...this.state.punchcard[this.state.selectedItem] } /> : '' }
-							<button className="intro-button" data-step="2" onClick={ this.triggerIntro }><span className='icon info'/></button>
-						</div>
-						<div className='row bottom-row template-tile'>
-							<h2>Imported component:</h2>
-							{ this.state.legend ? <Legend { ...this.state.legend } onItemSelected={ this.onLegendItemSelected }/> : '' }
-							<button className="intro-button" data-step="3" onClick={ this.triggerIntro }><span className='icon info'/></button>
-						</div>
-					</div>
-				</div>
-
-				<Modal isOpen={ this.state.aboutModalOpen } onRequestClose={ this.toggleAbout } style={ modalStyle }>
-					<button className="close" onClick={ this.toggleAbout }><span>×</span></button>
-					<h3>About this Map</h3>
-					<p>The subtitle is borrowed from historian Robin D.G. Kelley, who begins one of his essays with the question "What is the United States, if not a nation of overlapping diasporas?" At all points in its history, a significant proportion of the population of the United States had been born in other countries and regions. This being the case, American history can never be understood by just looking within its borders. The culture and politics of the US have always been profoundly shaped by the material and emotional ties many of its residents have had to the places where they were born. This map will allow you to begin to explore those connections at the basic level of demographic statistics. </p>
-					<h3>Sources</h3>
-					<p>All of the data comes from <a href='https://www.nhgis.org/'>Minnesota Population Center, National Historical Geographic Information System: Version 2.0 (Minneapolis, MN: University of Minnesota, 2011)</a>. County boundaries are from the Newberry Library's <a href='http://publications.newberry.org/ahcbp/'>Atlas of Historical County Boundaries</a>.</p>
-					<h3>Suggested Reading</h3>
-					<p>Much of the best scholarship on the foreign born concentrates on particular groups at specific moments in time, works like George J. Sanchez's <cite>Becoming Mexican American: Ethnicity, Culture and Identity in Chicano Los Angeles, 1900-1945</cite>. Some thoughtful works that deal with the foreign-born population and issues of migration more generally are:</p>
-					<ul>
-						<li>Roger Daniels, <cite>Coming to America: A History of Immigration and Ethnicity in American Life</cite> (New York: Harper Collins, 1990).</li>
-						<li>Thomas Bender, ed. <cite>Rethinking American History in a Global Age</cite> (Berkeley, CA: University of California Press, 2002). [Kelley's essay "How the West Was One: The African Diaspora and the Remapping of U.S. History" is in this collection.]</li>
-						<li>Henry Yu, "Los Angeles and American Studies in a Pacific World of Migrations," <cite>American Quarterly</cite> 56 (September 2004) 531-543.</li>
-						</ul>
-					<h3>Acknowledgements</h3>
-					<p>This map is authored by the staff of the Digital Scholarship Lab: Robert K. Nelson, Scott Nesbit, Edward L. Ayers, Justin Madron, and Nathaniel Ayers. Kim D'agostini and Erica Havens geolocated country locations.</p>
-			    <p>The developers, designers, and staff at <a href='http://stamen.com'>Stamen Design</a> have been exceptional partners on this project. Our thanks to Kai Chang, Jon Christensen, Sean Connelley, Seth Fitzsimmons, Eric Gelinas, Heather Grates, Nicolette Hayes, Alan McConchie, Michael Neuman, Dan Rademacher, Eric Rodenbeck, and Eric Socolofsky.</p>
-				</Modal>
-
-				<IntroManager { ...this.state.intro } />
-
-			</div>
-		);
-
-	}
+    // Overwrite default states with any states present in the hash
+    initialState = Object.assign({}, initialState, HashManager.getState());
+
+    // Update hash with merged result.
+    // Do this before setting up the `hashChanged` event handler,
+    // so that `render()` is not called until initial data are loaded.
+    console.log('[3a] The hash is updated with a merge of default state and state already existing in the hash.');
+    HashManager.updateHash(initialState);
+
+    // Handle all hash changes subsequent to the above initialization.
+    console.log('[3b] App registers with HashManager to be notified of subsequent changes in the hash.');
+    HashManager.addListener(HashManager.EVENT_HASH_CHANGED, this.hashChanged);
+
+  }
+
+  componentDidMount () {
+
+    window.addEventListener('resize', this.onWindowResize);
+
+  }
+
+  componentWillUnmount () {
+
+    HashManager.removeListener(HashManager.EVENT_HASH_CHANGED, this.hashChanged);
+    window.removeEventListener('resize', this.onWindowResize);
+
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+
+    // Do not re-render if the state change was just map state.
+    return !this.mapHashUpdated;
+
+  }
+
+  componentDidUpdate () {
+
+    //
+
+  }
+
+
+
+  // ============================================================ //
+  // Handlers
+  // ============================================================ //
+
+  hashChanged (event, suppressRender) {
+
+    // Ignore hash changes before initial data have loaded.
+    if (!ExampleStore.hasLoadedInitialData()) { return; }
+
+    if (event) {
+      console.log('[6b] ...App handles a change in the hash. A setState() call updates the application with the new state and triggers a render(), from where the new state will flow down the component tree.');
+    }
+
+    let data = ExampleStore.getData(),
+      selectedItemId = HashManager.getState(App.STATE_KEYS.ITEM),
+      mapState = HashManager.getState(HashManager.MAP_STATE_KEY),
+      newState;
+
+    newState = {
+      exampleComponent: {
+        title: data.exampleTitle,
+        loading: false
+      },
+      selectedItem: selectedItemId,
+      legend: {
+        ...data.legend, // merge existing state into new state
+        selectedItem: selectedItemId
+      },
+      punchcard: data.punchcard
+    };
+
+    if (mapState) {
+      newState.zoom = mapState.zoom;
+      newState.center = mapState.center;
+    }
+
+    // setState with the updated data, which causes a re-render()
+    this.setState(newState);
+
+    this.mapHashUpdated = false;
+
+  }
+
+  onLegendItemSelected (value, index) {
+
+    if (!isNaN(index)) {
+      AppActions.itemSelected(index);
+    }
+
+  }
+
+  onMapMoved (event) {
+
+    if (event && event.target) {
+      AppActions.mapMoved({
+        zoom: event.target.getZoom(),
+        center: event.target.getCenter()
+      });
+    }
+
+  }
+
+  onWindowResize (event) {
+
+    this.computeComponentDimensions();
+
+  }
+
+  toggleAbout () {
+
+    this.setState({
+      aboutModalOpen: !this.state.aboutModalOpen
+    });
+
+  }
+
+  triggerIntro (event) {
+
+    if (this.state.aboutModalOpen) {
+      this.toggleAbout();
+    }
+
+    this.setState({
+      intro: {
+        open: true,
+        step: (event && event.currentTarget) ? parseInt(event.currentTarget.dataset.step) : null,
+        config: {
+          showStepNumbers: false,
+          skipLabel: '×',
+          nextLabel: '⟩',
+          prevLabel: '⟨',
+          doneLabel: '×'
+        },
+
+        steps: [
+          {
+            element: '.left-column .top-row.template-tile',
+            intro: 'copy for step ONE goes here',
+            position: 'right'
+          },
+          {
+            element: '.left-column .bottom-row.template-tile',
+            intro: 'copy for step TWO goes here',
+            position: 'top'
+          },
+          {
+            element: '.right-column .top-row.template-tile',
+            intro: 'copy for step THREE goes here',
+            position: 'left'
+          },
+          {
+            element: '.right-column .bottom-row.template-tile',
+            intro: 'copy for step FOUR goes here',
+            position: 'top'
+          }
+        ],
+
+        onExit: this.onIntroExit
+      }
+    });
+
+  }
+
+  onIntroExit () {
+
+    this.setState({
+      intro: {
+        open: false
+      }
+    });
+
+  }
+
+
+
+  // ============================================================ //
+  // Helpers
+  // ============================================================ //
+
+  computeComponentDimensions () {
+
+    // based off of sizes stored within _variables.scss --
+    // if you change them there, change them here.
+    let containerPadding = 20,
+      headerHeight = 90,
+      breakpointWidthWide = 1280,
+      bottomRowHeightShort = 230,
+      bottomRowHeightTall = 310,
+      bottomRowHeight,
+      dimensions = {};
+
+    // Calculate bottom row height as set by media breakpoints
+    let bottomRowEl = document.querySelector('.bottom-row'),
+      bottomRowHeightStyle;
+
+    if (bottomRowEl) {
+      bottomRowHeightStyle = window.getComputedStyle(bottomRowEl);
+      bottomRowHeight = bottomRowEl.offsetHeight + parseFloat(bottomRowHeightStyle.marginTop.replace('px', '')) + parseFloat(bottomRowHeightStyle.marginBottom.replace('px', ''));
+    } else {
+      bottomRowHeight = window.innerWidth < breakpointWidthWide ? bottomRowHeightShort : bottomRowHeightTall;
+    }
+
+    dimensions.upperRight = {
+      height: window.innerHeight - bottomRowHeight - 3 * containerPadding
+    };
+    dimensions.upperLeft = {
+      height: dimensions.upperRight.height - headerHeight
+    };
+    dimensions.lowerLeft = {
+      height: bottomRowHeight - 2 * containerPadding
+    };
+    dimensions.lowerRight = {
+      height: dimensions.lowerLeft.height
+    };
+
+    this.setState({ dimensions: dimensions });
+
+  }
+
+
+
+  // ============================================================ //
+  // Render functions
+  // ============================================================ //
+
+  renderTileLayers () {
+
+    let layers = [];
+
+    if (cartodbLayers.layergroup && cartodbLayers.layergroup.layers) {
+      layers = layers.concat(cartodbLayers.layergroup.layers.map((item, i) => {
+        return (
+          <CartoDBTileLayer
+            key={ 'cartodb-tile-layer-' + i }
+            userId={ cartodbConfig.userId }
+            sql={ item.options.sql }
+            cartocss={ item.options.cartocss }
+          />
+        );
+      }));
+    }
+
+    if (tileLayers.layers) {
+      layers = layers.concat(tileLayers.layers.map((item, i) => {
+        return (
+          <TileLayer
+            key={ 'tile-layer-' + i }
+            url={ item.url }
+          />
+        );
+      }));
+    }
+
+    return layers;
+  }
+
+  render () {
+
+    let modalStyle = {
+      overlay : {
+        backgroundColor: null
+      },
+      content : {
+        top: null,
+        left: null,
+        right: null,
+        bottom: null,
+        border: null,
+        background: null,
+        borderRadius: null,
+        padding: null,
+        position: null
+      }
+    };
+
+    return (
+      <div className='container full-height'>
+
+        <div className='row full-height'>
+          <div className='columns eight left-column full-height'>
+            <header className='row u-full-width'>
+              <h1><span className='header-main'>PANORAMA TEMPLATE</span></h1>
+              <h4 onClick={ this.toggleAbout }>ABOUT THIS MAP</h4>
+              <button className='intro-button' data-step='1' onClick={ this.triggerIntro }><span className='icon info'/></button>
+            </header>
+            <div className='row top-row template-tile' style={ { height: this.state.dimensions.upperLeft.height + 'px' } }>
+            <Map { ...this.state.map } onLeafletMoveend={ this.onMapMoved }>
+                { this.renderTileLayers() }
+              </Map>
+            </div>
+            <div className='row bottom-row template-tile'>
+              <h2>Local component:</h2>
+              <ExampleComponent { ...this.state.exampleComponent } />
+              <button className='intro-button' data-step='2' onClick={ this.triggerIntro }><span className='icon info'/></button>
+            </div>
+          </div>
+          <div className='columns four right-column full-height'>
+            <div className='row top-row template-tile' style={ { height: this.state.dimensions.upperRight.height + 'px' } }>
+              { this.state.punchcard ? <Punchcard { ...this.state.punchcard[this.state.selectedItem] } /> : null }
+              <button className='intro-button' data-step='3' onClick={ this.triggerIntro }><span className='icon info'/></button>
+            </div>
+            <div className='row bottom-row template-tile'>
+              <h2>Imported component:</h2>
+              { this.state.legend ? <Legend { ...this.state.legend } onItemSelected={ this.onLegendItemSelected }/> : null }
+              <button className='intro-button' data-step='4' onClick={ this.triggerIntro }><span className='icon info'/></button>
+            </div>
+          </div>
+        </div>
+
+        <Modal isOpen={ this.state.aboutModalOpen } onRequestClose={ this.toggleAbout } style={ modalStyle }>
+          <button className='close' onClick={ this.toggleAbout }><span>×</span></button>
+          <h3>About this Map</h3>
+          <p>"Oh, if you take it that way," said John Bunsby, "I've nothing more to say." John Bunsby's suspicions were confirmed.  At a less advanced season of the year the typhoon, according to a famous meteorologist, would have passed away like a luminous cascade of electric flame; but in the winter equinox it was to be feared that it would burst upon them with great violence.</p>
+          <h3>Sources</h3>
+          <p>The pilot took his precautions in advance.  He reefed all sail, the pole-masts were dispensed with; all hands went forward to the bows.  A single triangular sail, of strong canvas, was hoisted as a storm-jib, so as to hold the wind from behind.  Then they waited.</p>
+          <h3>Suggested Reading</h3>
+          <p>John Bunsby had requested his passengers to go below; but this imprisonment in so narrow a space, with little air, and the boat bouncing in the gale, was far from pleasant.  Neither Mr. Fogg, Fix, nor Aouda consented to leave the deck.</p>
+          <h3>Acknowledgements</h3>
+          <p>The storm of rain and wind descended upon them towards eight o'clock. With but its bit of sail, the Tankadere was lifted like a feather by a wind, an idea of whose violence can scarcely be given.  To compare her speed to four times that of a locomotive going on full steam would be below the truth.</p>
+        </Modal>
+
+        <IntroManager { ...this.state.intro } />
+
+      </div>
+    );
+
+  }
 
 }
 
