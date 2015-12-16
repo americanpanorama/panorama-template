@@ -24,9 +24,21 @@ Example of `tileLayers.json`:
 
 ### The CartoDB tile layer
 
+The `cartodb` folder contains multiple files which the build process uses to generate a `basemaps.json` file (not included in the repository) which is a MapConfig file is sent to the [CartoDB Maps API](http://docs.cartodb.com/cartodb-platform/maps-api/) to generate an ["anonymous map"](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/) tile layer.
+
+You need to modify at least three files: `basemaps.yml`, `config.json`, and `layers.yml`, plus however many style files you need for your layers, which are placed in `styles/*.mss`. 
+
+The `basemaps.yml` file defines which layers you want to include in the resulting tile layer, and which order they should appear.
+
+The `layers.yml` file defines the CartoDB SQL for each of the layers in `basemaps.yml`. 
+
+The `config.json` file specifies your CartoDB `userID`, and an optional `apiKey` if you are using private tables.
+
+For each layer defined in `layers.yml`, you need to have a `.mss` file in the `styles/` folder that has the exact same name as they layer.
+
 #### TODO: more info here
 
- * What to do in the .yml files
+ * What else to do in the .yml files
  * How to debug with Tessera
  * How to develop using CartoDB Editor
  * How to organize your CartoDB tables, reproject them, and make them public
