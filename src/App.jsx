@@ -1,4 +1,5 @@
 // import node modules
+import d3 from 'd3';
 import * as React from 'react';
 import Modal from 'react-modal';
 import { Map, TileLayer, GeoJson } from 'react-leaflet';
@@ -238,7 +239,7 @@ class App extends React.Component {
         ...data.legend, // merge existing state into new state
         selectedItem: selectedItemId
       },
-      punchcard: data.punchcard
+      punchcard: this.parsePunchcardData(data.punchcard)
     };
 
     if (mapState) {
@@ -389,6 +390,43 @@ class App extends React.Component {
 
   }
 
+  parsePunchcardData (data) {
+
+    // Our sample data, loaded from sampleData.json in ExampleStore, contains three different datasets.
+    // Map each dataset to a Punchcard config and store in `punchcardData` array.
+    // Then, as the ItemSelector selected item changes,
+    // we simply pass the corresponding mapped data + config into Punchcard.
+    let punchcardData = data.map(dataset => {
+
+      let config = {
+        loading: false,
+        radiusMaxValue: 0,
+        colorAccessor: d => d.aggregateNormalizedValue,
+        valueAccessor: d => d.normalizedValue,
+        colorScale: d3.scale.ordinal().range(['rgb(188, 35, 64)', 'rgb(228, 104, 75)', 'rgb(187, 27, 105)', 'rgb(103, 116, 99)', 'rgb(26, 169, 143)', 'rgb(10, 103, 150)', 'rgb(67, 40, 93)', 'rgb(86, 96, 99)']),
+        textValueFormatter: d3.format(',0'),
+        selectAccessor: d => d.name,
+        headerMargin: 110
+      };
+
+      dataset.categories.forEach(d => {
+        config.radiusMaxValue = Math.max(config.radiusMaxValue, d3.max(d.commodities, v => v.normalizedValue));
+      });
+
+      config.colorScale.domain([1, d3.max(dataset.categories, config.colorAccessor)]);
+
+      // Merge parsed data with header data and config
+      return Object.assign({
+        data: dataset.categories,
+        header: dataset.header
+      }, config);
+
+    });
+
+    return punchcardData;
+
+  }
+
 
 
   // ============================================================ //
@@ -468,6 +506,11 @@ class App extends React.Component {
           </div>
           <div className='columns four right-column full-height'>
             <div className='row top-row template-tile' style={ { height: this.state.dimensions.upperRight.height + 'px' } }>
+              { this.state.punchcard ?
+                <div className='punchcard-header'>
+                  <h2 className='col'>{ this.state.punchcard[this.state.selectedItem].header.title.toUpperCase() }</h2>
+                  <h3 className='col'><span className='subtitle'>{ this.state.punchcard[this.state.selectedItem].header.subtitle }</span><span className='caption'>{ this.state.punchcard[this.state.selectedItem].header.caption }</span></h3>
+                </div> : null }
               { this.state.punchcard ? <Punchcard { ...this.state.punchcard[this.state.selectedItem] } /> : null }
               <button className='intro-button' data-step='3' onClick={ this.triggerIntro }><span className='icon info'/></button>
             </div>

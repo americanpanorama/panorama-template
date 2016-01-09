@@ -155,6 +155,24 @@ header {
   height: 100%;
 }
 
+.punchcard-header {
+  h2, h3 {
+    margin-bottom: 0;
+  }
+  .subtitle {
+    display: inline-block;
+  }
+  .caption {
+    display: inline-block;
+    float: right;
+  }
+}
+
+.punchcard {
+  position: absolute;
+  top: 0;
+}
+
 .intro-button {
   display: block;
   position: absolute;
