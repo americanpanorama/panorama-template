@@ -25,7 +25,7 @@
   "author": "stamen",
   "license": "ISC",
   "dependencies": {
-    "@panorama/toolkit": "^0.1.0",
+    "@panorama/toolkit": "^0.1.6",
     "cartodb-client": "stamen/cartodb-client",
     "d3": "^3.5.6",
     "flux": "^2.1.1",
