@@ -34,7 +34,7 @@ The `layers.yml` file defines the CartoDB SQL for each of the layers in `basemap
 
 The `config.json` file specifies your CartoDB `userID`, and an optional `apiKey` if you are using private tables.
 
-For each layer defined in `layers.yml`, you need to have a `.mss` file in the `styles/` folder that has the exact same name as they layer.
+For each layer defined in `layers.yml`, you need to have a `.mss` file in the `styles/` folder that has the exact same name as the layer.
 
 #### TODO: more info here
 
